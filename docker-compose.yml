@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: dunnas_condominium_development
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d dunnas_condominium_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql
+ 
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/rails:cached
+      - bundle_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://admin:root@db:5432/dunnas_condominium_development
+    depends_on:
+      db:
+        condition: service_healthy
+
+  adminer:
+    image: adminer
+    restart: always
+    profiles: ["tools"]
+    ports:
+      - 8080:8080
+ 
+volumes:
+  pgdata:
+  bundle_cache:
