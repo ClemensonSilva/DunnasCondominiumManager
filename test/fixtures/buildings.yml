@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  condominium: one
+  number_of_apartments: 1
+  number_of_floors: 1
+
+two:
+  name: MyString
+  condominium: two
+  number_of_apartments: 1
+  number_of_floors: 1

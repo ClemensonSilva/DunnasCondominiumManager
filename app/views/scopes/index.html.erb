@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Scopes" %>
+
+<h1>Scopes</h1>
+
+<div id="scopes">
+  <% @scopes.each do |scope| %>
+    <%= render scope %>
+    <p>
+      <%= link_to "Show this scope", scope %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New scope", new_scope_path %>
