@@ -4,18 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum user_type: { admin: 0, resident: 1, colaborator: 2 }
-
-  def admin?
-    user_type.to_i == 0
-  end
-
-  def resident?
-    user_type.to_i == 1
-  end
-
-  def colaborator?
-    user_type.to_i == 2
-  end
-  
+  enum :user_type, { admin: 0, resident: 1, colaborator: 2 }
+  has_and_belongs_to_many :scopes, join_table: :scopes_users
+  has_many :tickets
+  has_many :comments
 end

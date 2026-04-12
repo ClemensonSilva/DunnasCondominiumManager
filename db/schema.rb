@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_193000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_195353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_193000) do
   create_table "tickets", force: :cascade do |t|
     t.bigint "apartment_id", null: false
     t.string "attachments"
+    t.bigint "collaborator_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.datetime "finished_at"
@@ -91,6 +92,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_193000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["apartment_id"], name: "index_tickets_on_apartment_id"
+    t.index ["collaborator_id"], name: "index_tickets_on_collaborator_id"
     t.index ["ticket_status_id"], name: "index_tickets_on_ticket_status_id"
     t.index ["ticket_type_id"], name: "index_tickets_on_ticket_type_id"
     t.index ["user_id"], name: "index_tickets_on_user_id"
@@ -119,4 +121,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_193000) do
   add_foreign_key "tickets", "ticket_statuses"
   add_foreign_key "tickets", "ticket_types"
   add_foreign_key "tickets", "users"
+  add_foreign_key "tickets", "users", column: "collaborator_id"
 end
