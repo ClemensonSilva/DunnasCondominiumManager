@@ -1,4 +1,5 @@
 class ScopesController < ApplicationController
+  load_and_authorize_resource
   before_action :set_scope, only: %i[ show edit update destroy ]
 
   # GET /scopes or /scopes.json
