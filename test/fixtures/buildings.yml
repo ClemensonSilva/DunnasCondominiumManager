@@ -2,12 +2,10 @@
 
 one:
   name: MyString
-  condominium: one
-  number_of_apartments: 1
+  apartments_per_floor: 1
   number_of_floors: 1
 
 two:
   name: MyString
-  condominium: two
-  number_of_apartments: 1
+  apartments_per_floor: 1
   number_of_floors: 1
