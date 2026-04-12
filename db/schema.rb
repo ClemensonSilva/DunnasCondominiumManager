@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_211629) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_173442) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_211629) do
     t.bigint "building_id", null: false
     t.datetime "created_at", null: false
     t.integer "floor"
-    t.string "number"
+    t.string "identificator"
     t.datetime "updated_at", null: false
     t.index ["building_id"], name: "index_apartments_on_building_id"
   end
@@ -29,9 +29,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_211629) do
   end
 
   create_table "buildings", force: :cascade do |t|
+    t.integer "apartments_per_floor"
     t.datetime "created_at", null: false
     t.string "name"
-    t.integer "number_of_apartments"
     t.integer "number_of_floors"
     t.datetime "updated_at", null: false
   end
