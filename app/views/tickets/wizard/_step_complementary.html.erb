@@ -1,0 +1,19 @@
+<div class="d-none" data-ticket-wizard-target="step">
+  <div class="card border-0 bg-light-subtle">
+    <div class="card-body p-4">
+      <h3 class="h6 mb-3">Etapa 3. Informacoes complementares</h3>
+      <div class="row g-3">
+        <div class="col-12 col-lg-6">
+          <%= form.label :attachments, "Anexos: pode ser uma foto ou documento", class: "form-label" %>
+          <%= form.text_field :attachments, class: "form-control", placeholder: "Link, nome do arquivo ou referencia" %>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <%= form.label :finished_at, "Data prevista de conclusao", class: "form-label" %>
+          <input type="text" class="form-control" data-ticket-wizard-target="estimatedDisplay" readonly>
+          <%= form.hidden_field :finished_at, data: { ticket_wizard_target: "finishedAtInput" } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
