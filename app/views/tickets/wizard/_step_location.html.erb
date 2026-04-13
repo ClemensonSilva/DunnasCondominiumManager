@@ -5,12 +5,12 @@
       <div class="row g-3">
         <div class="col-12 col-lg-6">
           <%= form.label :apartment_id, "Apartamento", class: "form-label" %>
-          <%= form.select :apartment_id, options_for_select(@apartment_options, ticket.apartment_id), { prompt: "Selecione o apartamento" }, class: "form-select", required: true %>
+          <%= form.select :apartment_id, options_for_select(@apartment_options || [], ticket.apartment_id), { prompt: "Selecione o apartamento" }, class: "form-select", required: true %>
         </div>
 
         <div class="col-12 col-lg-6">
           <%= form.label :ticket_type_id, "Tipo de chamado", class: "form-label" %>
-          <%= form.select :ticket_type_id, options_for_select(@ticket_type_options, ticket.ticket_type_id), { prompt: "Selecione o tipo" }, class: "form-select", required: true %>
+          <%= form.select :ticket_type_id, options_for_select(@ticket_type_options || [], ticket.ticket_type_id), { prompt: "Selecione o tipo" }, class: "form-select", required: true %>
         </div>
       </div>
     </div>

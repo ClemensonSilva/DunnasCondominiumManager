@@ -10,7 +10,7 @@
   aria-hidden="true"
   data-controller="ticket-wizard"
   data-ticket-wizard-auto-open-value="<%= ticket.errors.any? %>"
-  data-ticket-wizard-sla-map-value="<%= @ticket_type_sla_map.to_json %>"
+  data-ticket-wizard-sla-map-value="<%= (@ticket_type_sla_map || {}).to_json %>"
   data-ticket-wizard-auto-calculate-finished-at-value="<%= auto_calculate_finished_at %>"
   data-action="input->ticket-wizard#refreshSummary change->ticket-wizard#refreshSummary"
 >

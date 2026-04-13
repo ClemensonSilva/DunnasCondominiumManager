@@ -1,17 +1,17 @@
 <div id="<%= dom_id ticket %>">
   <div>
     <strong>User:</strong>
-    <%= ticket.user_id %>
+    <%= ticket.user&.name %>
   </div>
 
   <div>
     <strong>Apartment:</strong>
-    <%= ticket.apartment_id %>
+    <%= ticket.apartment&.identificator %>
   </div>
 
   <div>
     <strong>Ticket status:</strong>
-    <%= ticket.ticket_status_id %>
+    <%= ticket.ticket_status&.title %>
   </div>
 
   <div>
