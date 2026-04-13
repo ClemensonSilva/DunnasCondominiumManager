@@ -1,16 +1,15 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Buildings" %>
 
-<h1>Buildings</h1>
-
-<div id="buildings">
-  <% @buildings.each do |building| %>
-    <%= render building %>
-    <p>
-      <%= link_to "Show this building", building %>
-    </p>
-  <% end %>
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+  <div>
+    <h1 class="h2 mb-1">Buildings</h1>
+    <p class="text-secondary mb-0">Visao geral dos predios cadastrados.</p>
+  </div>
+  <%= link_to "New building", new_building_path, class: "btn btn-primary" %>
 </div>
 
-<%= link_to "New building", new_building_path %>
+<div id="buildings" class="row g-4">
+  <% @buildings.each do |building| %>
+    <%= render building %>
+  <% end %>
+</div>

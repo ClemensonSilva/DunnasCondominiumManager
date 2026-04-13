@@ -9,3 +9,16 @@
  * Consider organizing styles into separate files for maintainability.
  */
 @import "bootstrap";
+
+.building-card {
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.building-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 1rem 2rem rgba(13, 110, 253, 0.12) !important;
+}
+
+.chamados-placeholder {
+	letter-spacing: 0.01em;
+}

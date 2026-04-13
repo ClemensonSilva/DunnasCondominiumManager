@@ -1,16 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @users_title || "Usuarios" %>
 
-<% content_for :title, "Users" %>
+<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+  <div>
+    <h1 class="h2 mb-1"><%= @users_title || "Usuarios" %></h1>
+    <p class="text-secondary mb-0">Gerenciamento de usuarios por perfil.</p>
+  </div>
 
-<h1>Users</h1>
-
-<div id="users">
-  <% @users.each do |user| %>
-    <%= render user %>
-    <p>
-      <%= link_to "Show this user", user %>
-    </p>
-  <% end %>
+  <div class="d-flex flex-wrap gap-2">
+    <%= link_to "Todos", users_path, class: "btn #{action_name == 'index' ? 'btn-primary' : 'btn-outline-primary'}" %>
+    <%= link_to "Residentes", residents_users_path, class: "btn #{action_name == 'residents' ? 'btn-primary' : 'btn-outline-primary'}" %>
+    <%= link_to "Colaboradores", colaborators_users_path, class: "btn #{action_name == 'colaborators' ? 'btn-primary' : 'btn-outline-primary'}" %>
+    <%= link_to "Novo usuario", new_user_path, class: "btn btn-success" %>
+  </div>
 </div>
 
-<%= link_to "New user", new_user_path %>
+<div id="users" class="row g-4">
+  <% @users.each do |user| %>
+    <%= render user %>
+  <% end %>
+</div>

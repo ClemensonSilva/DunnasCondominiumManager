@@ -9,4 +9,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :apartments, join_table: :apartments_users
   has_many :tickets
   has_many :comments
+
+  scope :residents, -> { where(user_type: :resident) }
+  scope :colaborators, -> { where(user_type: :colaborator) }
 end

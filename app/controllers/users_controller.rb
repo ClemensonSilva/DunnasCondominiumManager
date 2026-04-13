@@ -4,7 +4,22 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users_title = "Usuarios"
+    @users = users_scope
+  end
+
+  def residents
+    authorize! :read, User
+    @users_title = "Residentes"
+    @users = User.residents
+    render :index
+  end
+
+  def colaborators
+    authorize! :read, User
+    @users_title = "Colaboradores"
+    @users = User.colaborators 
+    render :index
   end
 
   # GET /users/1 or /users/1.json
@@ -71,5 +86,9 @@ class UsersController < ApplicationController
       else
         params.expect(user: [ :name, :email, :password, :password_confirmation ])
       end
+    end
+
+    def users_scope
+      User.accessible_by(current_ability, :read).includes(:scopes, :apartments)
     end
 end
