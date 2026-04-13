@@ -1,8 +1,10 @@
 <aside class="position-fixed top-0 start-0 vh-100 col-12 col-md-3 col-lg-2 text-white d-flex flex-column justify-content-between p-3" style="background-color: #1b4d5c;">
 	<% ticket_tree_open = %w[tickets comments ticket_statuses scopes].include?(controller_name) %>
 	<% users_tree_open = controller_name == "users" %>
-	<% ticket_link_class = ticket_tree_open ? "nav-link flex-grow-1 px-3 py-2 bg-light text-dark text-decoration-none fw-medium rounded" : "nav-link flex-grow-1 px-3 py-2 text-white text-decoration-none fw-medium rounded" %>
-	<% user_link_class = users_tree_open ? "nav-link flex-grow-1 px-3 py-2 bg-light text-dark text-decoration-none fw-medium rounded" : "nav-link flex-grow-1 px-3 py-2 text-white text-decoration-none fw-medium rounded" %>
+	<% ticket_root_class = ticket_tree_open ? "d-flex align-items-center justify-content-between gap-2 bg-light text-dark rounded" : "d-flex align-items-center justify-content-between gap-2 text-white" %>
+	<% ticket_link_class = ticket_tree_open ? "nav-link flex-grow-1 px-3 py-2 text-dark text-decoration-none fw-medium rounded" : "nav-link flex-grow-1 px-3 py-2 text-white text-decoration-none fw-medium rounded" %>
+	<% users_root_class = users_tree_open ? "d-flex align-items-center justify-content-between gap-2 bg-light text-dark rounded" : "d-flex align-items-center justify-content-between gap-2 text-white" %>
+	<% user_link_class = users_tree_open ? "nav-link flex-grow-1 px-3 py-2 text-dark text-decoration-none fw-medium rounded" : "nav-link flex-grow-1 px-3 py-2 text-white text-decoration-none fw-medium rounded" %>
 	<div>
 		<div class="border-bottom border-light border-opacity-25 pb-3 mb-3">
 			<h6 class="mb-1"><%= current_user.name.presence || "Usuario" %></h6>
@@ -12,8 +14,8 @@
 		<nav class="nav nav-pills flex-column gap-1" aria-label="Operacao">
 			<%= link_to "Predios", buildings_path, class: "nav-link #{controller_name == 'buildings' ? 'bg-light text-dark' : 'text-white'}" %>
 
-			<div>
-				<div class="d-flex align-items-center justify-content-between gap-2 <%= ticket_tree_open ? 'bg-light text-dark rounded' : 'text-white' %>">
+			<div class="mb-1">
+				<div class="<%= ticket_root_class %>">
 					<%= link_to "Tickets", tickets_path, class: ticket_link_class %>
 					<button
 						type="button"
@@ -36,8 +38,8 @@
 				</div>
 			</div>
 
-			<div>
-				<div class="d-flex align-items-center justify-content-between nav-link <%= users_tree_open ? 'bg-light text-dark' : 'text-white' %>">
+			<div class="mb-1">
+				<div class="<%= users_root_class %>">
 					<%= link_to "Usuarios", users_path, class: user_link_class %>
 					<button
 						type="button"

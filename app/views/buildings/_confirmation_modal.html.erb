@@ -1,0 +1,51 @@
+<% modal_id = local_assigns.fetch(:modal_id, "buildingConfirmModal") %>
+<% modal_label_id = "#{modal_id}Label" %>
+
+<div
+  class="modal fade"
+  id="<%= modal_id %>"
+  tabindex="-1"
+  aria-labelledby="<%= modal_label_id %>"
+  aria-hidden="true"
+  data-controller="building-confirmation"
+  data-building-confirmation-name-source-value="building_name"
+  data-building-confirmation-apartments-source-value="building_apartments_per_floor"
+  data-building-confirmation-floors-source-value="building_number_of_floors"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="<%= modal_label_id %>">Confirmar novo predio</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="card border-0 bg-light-subtle">
+          <div class="card-body">
+            <h3 class="h6 text-secondary mb-3">Confira os dados antes de salvar</h3>
+            <dl class="mb-0">
+              <div class="d-flex justify-content-between py-2 border-bottom">
+                <dt class="text-secondary fw-medium">Nome</dt>
+                <dd class="mb-0 fw-semibold" data-building-confirmation-target="name">-</dd>
+              </div>
+              <div class="d-flex justify-content-between py-2 border-bottom">
+                <dt class="text-secondary fw-medium">Apartamentos por andar</dt>
+                <dd class="mb-0 fw-semibold" data-building-confirmation-target="apartments">-</dd>
+              </div>
+              <div class="d-flex justify-content-between py-2">
+                <dt class="text-secondary fw-medium">Numero de andares</dt>
+                <dd class="mb-0 fw-semibold" data-building-confirmation-target="floors">-</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Revisar</button>
+        <button type="submit" class="btn btn-primary" form="<%= form_dom_id %>">Confirmar e salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+

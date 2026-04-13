@@ -1,0 +1,12 @@
+<% search_path = local_assigns.fetch(:path, request.path) %>
+<% search_placeholder = local_assigns.fetch(:placeholder, "Buscar...") %>
+<% search_param = local_assigns.fetch(:param, :q) %>
+<% search_value = params[search_param] %>
+
+<%= form_with url: search_path, method: :get, local: true, class: "w-100" do %>
+  <div class="input-group">
+    <span class="input-group-text bg-white text-secondary">Buscar</span>
+    <%= text_field_tag search_param, search_value, class: "form-control", placeholder: search_placeholder, aria: { label: search_placeholder } %>
+    <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
+  </div>
+<% end %>

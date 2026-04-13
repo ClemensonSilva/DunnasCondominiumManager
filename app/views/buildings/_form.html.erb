@@ -1,32 +1,50 @@
-<%= form_with(model: building) do |form| %>
-  <% if building.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(building.errors.count, "error") %> prohibited this building from being saved:</h2>
+<% confirm_before_submit = local_assigns.fetch(:confirm_before_submit, false) %>
+<% form_dom_id = local_assigns.fetch(:form_id, dom_id(building, building.persisted? ? :edit : :new)) %>
 
-      <ul>
-        <% building.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<%= form_with(model: building, id: form_dom_id, class: "card border-0 shadow-sm") do |form| %>
+  <div class="card-body p-4 p-lg-5">
+    <% if building.errors.any? %>
+      <div class="alert alert-danger" role="alert">
+        <h2 class="h6 mb-2"><%= pluralize(building.errors.count, "erro") %> impediram este predio de ser salvo:</h2>
+        <ul class="mb-0 ps-3">
+          <% building.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= form.label :name, "Nome do predio", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", placeholder: "Ex.: Edificio Dunnas I" %>
     </div>
-  <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <%= form.label :apartments_per_floor, "Apartamentos por andar", class: "form-label" %>
+        <%= form.number_field :apartments_per_floor, class: "form-control", min: 1 %>
+      </div>
 
-  <div>
-    <%= form.label :apartments_per_floor, style: "display: block" %>
-    <%= form.number_field :apartments_per_floor %>
-  </div>
+      <div class="col-12 col-md-6">
+        <%= form.label :number_of_floors, "Numero de andares", class: "form-label" %>
+        <%= form.number_field :number_of_floors, class: "form-control", min: 1 %>
+      </div>
+    </div>
 
-  <div>
-    <%= form.label :number_of_floors, style: "display: block" %>
-    <%= form.number_field :number_of_floors %>
-  </div>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+      <% if confirm_before_submit %>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#buildingConfirmModal">
+          Criar predio
+        </button>
+      <% else %>
+        <%= form.submit class: "btn btn-primary" %>
+      <% end %>
 
-  <div>
-    <%= form.submit %>
+      <%= link_to "Cancelar", buildings_path, class: "btn btn-outline-secondary" %>
+    </div>
   </div>
+<% end %>
+
+<% if confirm_before_submit %>
+  <%= render "confirmation_modal", form_dom_id: form_dom_id, modal_id: "buildingConfirmModal" %>
 <% end %>

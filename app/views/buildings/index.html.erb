@@ -8,6 +8,10 @@
   <%= link_to "New building", new_building_path, class: "btn btn-primary" %>
 </div>
 
+<div class="mb-4">
+  <%= render "layouts/search", path: buildings_path, placeholder: "Exemplo: Canário Verde" %>
+</div>
+
 <div id="buildings" class="row g-4">
   <% @buildings.each do |building| %>
     <%= render building %>
