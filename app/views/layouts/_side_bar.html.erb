@@ -1,21 +1,21 @@
-<aside class="position-fixed top-0 start-0 vh-100 col-12 col-md-3 col-lg-2 bg-dark text-white d-flex flex-column justify-content-between p-3">
+<aside class="position-fixed top-0 start-0 vh-100 col-12 col-md-3 col-lg-2 text-white d-flex flex-column justify-content-between p-3" style="background-color: #1b4d5c;">
 	<div>
-		<div class="border-bottom border-secondary pb-3 mb-3">
+		<div class="border-bottom border-light border-opacity-25 pb-3 mb-3">
 			<h6 class="mb-1"><%= current_user.name.presence || "Usuario" %></h6>
-			<small class="text-secondary-emphasis"><%= current_user.email %></small>
+			<small class="text-white-50"><%= current_user.email %></small>
 		</div>
 
 		<nav class="nav nav-pills flex-column gap-1" aria-label="Operacao">
-			<%= link_to "Predios", buildings_path, class: "nav-link #{controller_name == 'buildings' ? 'active' : 'text-white'}" %>
-			<%= link_to "Tickets", tickets_path, class: "nav-link #{controller_name == 'tickets' ? 'active' : 'text-white'}" %>
-			<%= link_to "Comentarios", comments_path, class: "nav-link #{controller_name == 'comments' ? 'active' : 'text-white'}" %>
-			<%= link_to "Escopos", scopes_path, class: "nav-link #{controller_name == 'scopes' ? 'active' : 'text-white'}" %>
-			<%= link_to "Status de Ticket", ticket_statuses_path, class: "nav-link #{controller_name == 'ticket_statuses' ? 'active' : 'text-white'}" %>
-			<%= link_to "Usuarios", users_path, class: "nav-link #{controller_name == 'users' ? 'active' : 'text-white'}" %>
+			<%= link_to "Predios", buildings_path, class: "nav-link #{controller_name == 'buildings' ? 'bg-light text-dark' : 'text-white'}" %>
+			<%= link_to "Tickets", tickets_path, class: "nav-link #{controller_name == 'tickets' ? 'bg-light text-dark' : 'text-white'}" %>
+			<%= link_to "Comentarios", comments_path, class: "nav-link #{controller_name == 'comments' ? 'bg-light text-dark' : 'text-white'}" %>
+			<%= link_to "Escopos", scopes_path, class: "nav-link #{controller_name == 'scopes' ? 'bg-light text-dark' : 'text-white'}" %>
+			<%= link_to "Status de Ticket", ticket_statuses_path, class: "nav-link #{controller_name == 'ticket_statuses' ? 'bg-light text-dark' : 'text-white'}" %>
+			<%= link_to "Usuarios", users_path, class: "nav-link #{controller_name == 'users' ? 'bg-light text-dark' : 'text-white'}" %>
 		</nav>
 	</div>
 
 	<div>
-		<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-light w-100" %>
+		<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-light text-dark w-100" %>
 	</div>
 </aside>
