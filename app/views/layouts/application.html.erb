@@ -47,13 +47,17 @@
         </div>
       </div>
     <% else %>
-      <main class="container py-4">
-        <% if notice.present? %>
-          <div class="alert alert-success" role="alert"><%= notice %></div>
-        <% end %>
-        <% if alert.present? %>
-          <div class="alert alert-danger" role="alert"><%= alert %></div>
-        <% end %>
+      <%= render "layouts/public_navbar" %>
+
+      <main class="bg-white">
+        <div class="container py-3">
+          <% if notice.present? %>
+            <div class="alert alert-success" role="alert"><%= notice %></div>
+          <% end %>
+          <% if alert.present? %>
+            <div class="alert alert-danger" role="alert"><%= alert %></div>
+          <% end %>
+        </div>
 
         <%= yield %>
       </main>
