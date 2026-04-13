@@ -14,6 +14,16 @@
     <%= user.user_type %>
   </div>
 
+  <div>
+    <strong>Scopes:</strong>
+    <%= user.scopes.map(&:title).join(", ").presence || "-" %>
+  </div>
+
+  <div>
+    <strong>Apartments:</strong>
+    <%= user.apartments.map(&:identificator).join(", ").presence || "-" %>
+  </div>
+
   
 
 </div>

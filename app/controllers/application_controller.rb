@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |_exception|
     if user_signed_in?
-      redirect_to root_path, alert: "Você não tem permissão para acessar esta página."
+      redirect_to authenticated_root_path, alert: "Você não tem permissão para acessar esta página."
     else
       redirect_to new_user_session_path, alert: "Faça login para continuar."
     end
@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :user_type ])
-    devise_parameter_sanitizer.permit(:account_update, keys: [ :name, :user_type ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :name ])
   end
 end
