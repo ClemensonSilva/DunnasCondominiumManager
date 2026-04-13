@@ -2,7 +2,11 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |_exception|
-    redirect_to root_path, alert: "Você não tem permissão para acessar esta página."
+    if user_signed_in?
+      redirect_to root_path, alert: "Você não tem permissão para acessar esta página."
+    else
+      redirect_to new_user_session_path, alert: "Faça login para continuar."
+    end
   end
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
