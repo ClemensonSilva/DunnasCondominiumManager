@@ -9,6 +9,8 @@ class BuildingsController < ApplicationController
 
   # GET /buildings/1 or /buildings/1.json
   def show
+    @tickets = Building.tickets_for_show(@building.id)
+    @residents_count = Building.residents_count_for(@building.id)
   end
 
   # GET /buildings/new
