@@ -1,10 +1,15 @@
 class CommentsController < ApplicationController
-  load_and_authorize_resource
+  before_action :set_ticket
   before_action :set_comment, only: %i[ show edit update destroy ]
+  before_action :authorize_ticket_access!
+  before_action :authorize_comment_access!, only: %i[ show edit update destroy ]
 
   # GET /comments or /comments.json
   def index
-    @comments = Comment.all
+    @comments = @ticket.comments.accessible_by(current_ability, :read)
+    if @comments.empty?
+      redirect_to @ticket, alert: "Nenhum comentário encontrado para este chamado."
+    end
   end
 
   # GET /comments/1 or /comments/1.json
@@ -13,7 +18,17 @@ class CommentsController < ApplicationController
 
   # GET /comments/new
   def new
-    @comment = Comment.new
+    if @ticket.nil?
+      redirect_to tickets_path, alert: "Chamado não encontrado para criar um comentário."
+      return
+    end
+    if @ticket.finished_at.present?
+      redirect_to @ticket, alert: "Não é possível adicionar comentários a um chamado finalizado."
+      return
+    end
+
+    @comment = Comment.new(user: current_user, ticket: @ticket)
+    authorize! :create, @comment
   end
 
   # GET /comments/1/edit
@@ -22,11 +37,13 @@ class CommentsController < ApplicationController
 
   # POST /comments or /comments.json
   def create
-    @comment = Comment.new(comment_params)
+    @comment = @ticket.comments.build(comment_params)
+    @comment.user = current_user
+    authorize! :create, @comment
 
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to @comment, notice: "Comment was successfully created." }
+        format.html { redirect_to @ticket, notice: "Comentário adicionado com sucesso.", status: :see_other }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +56,7 @@ class CommentsController < ApplicationController
   def update
     respond_to do |format|
       if @comment.update(comment_params)
-        format.html { redirect_to @comment, notice: "Comment was successfully updated.", status: :see_other }
+        format.html { redirect_to ticket_comment_path(@ticket, @comment), notice: "Comment was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @comment }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -53,7 +70,7 @@ class CommentsController < ApplicationController
     @comment.destroy!
 
     respond_to do |format|
-      format.html { redirect_to comments_path, notice: "Comment was successfully destroyed.", status: :see_other }
+      format.html { redirect_to ticket_comments_path(@ticket), notice: "Comment was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -61,11 +78,33 @@ class CommentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
-      @comment = Comment.find(params.expect(:id))
+      @comment = @ticket.comments.find(params.expect(:id))
     end
 
+    def set_ticket
+      @ticket = Ticket.find(params.expect(:ticket_id))
+    end
+
+    def authorize_ticket_access!
+      authorize! :read, @ticket
+    end
+
+    def authorize_comment_access!
+      action = case action_name.to_sym
+      when :show
+        :read
+      when :edit, :update
+        :update
+      when :destroy
+        :destroy
+      else
+        :read
+      end
+
+      authorize! action, @comment
+    end
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.expect(comment: [ :user_id, :ticket_id, :content ])
+      params.expect(comment: [ :content ])
     end
 end

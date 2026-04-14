@@ -4,10 +4,18 @@ export default class extends Controller {
   static targets = ["modal"]
   static values = {
     autoOpen: Boolean,
+    closePath: String,
     modalId: String
   }
 
   connect() {
+    this.boundHandleHidden = this.handleHidden.bind(this)
+
+    const modalElement = this.findModalElement()
+    if (modalElement) {
+      modalElement.addEventListener("hidden.bs.modal", this.boundHandleHidden)
+    }
+
     if (this.autoOpenValue) {
       this.open()
     }
@@ -22,6 +30,21 @@ export default class extends Controller {
     window.bootstrap.Modal.getOrCreateInstance(modalElement).show()
   }
 
+  disconnect() {
+    const modalElement = this.findModalElement()
+    if (modalElement && this.boundHandleHidden) {
+      modalElement.removeEventListener("hidden.bs.modal", this.boundHandleHidden)
+    }
+
+    if (modalElement && window.bootstrap) {
+      const modalInstance = window.bootstrap.Modal.getInstance(modalElement)
+      if (modalInstance) {
+        modalInstance.hide()
+        modalInstance.dispose()
+      }
+    }
+  }
+
   close(event) {
     if (event) event.preventDefault()
 
@@ -29,6 +52,17 @@ export default class extends Controller {
     if (!modalElement || !window.bootstrap) return
 
     window.bootstrap.Modal.getOrCreateInstance(modalElement).hide()
+  }
+
+  handleHidden() {
+    if (!this.hasClosePathValue) return
+
+    if (window.Turbo?.visit) {
+      window.Turbo.visit(this.closePathValue, { action: "replace" })
+      return
+    }
+
+    window.location.assign(this.closePathValue)
   }
 
   findModalElement(event) {

@@ -12,9 +12,9 @@ class BuildingsController < ApplicationController
       @buildings = User.find(current_user.id).buildings_of_resident
     end
     if current_user.colaborator?
-      scope = User.find(current_user.id).scopes.first
-      @buildings = Building.joins(:tickets)
-                           .where(tickets: { scope_id: scope.id })
+      scope_ids = current_user.scope_ids
+      @buildings = Building.joins(tickets: :ticket_type)
+                           .where(ticket_types: { scope_id: scope_ids })
                            .distinct
 
     end
@@ -29,7 +29,7 @@ class BuildingsController < ApplicationController
   def show
     stats = BuildingStatistics.new(@building)
 
-    @tickets = stats.tickets_for_show
+    @tickets = stats.tickets_for_show.merge(Ticket.accessible_by(current_ability, :read))
     @tickets_count = @tickets.size
     @residents_count = stats.residents_count
 

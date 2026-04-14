@@ -12,4 +12,12 @@ class User < ApplicationRecord
 
   scope :residents, -> { where(user_type: :resident) }
   scope :colaborators, -> { where(user_type: :colaborator) }
+
+  def buildings_of_resident
+    return nil unless resident?
+
+    Building.joins(apartments: :users)
+            .where(users: { id: id })
+            .distinct
+  end
 end
