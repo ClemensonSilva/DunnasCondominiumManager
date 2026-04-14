@@ -1,32 +1,23 @@
-<%= form_with(model: comment) do |form| %>
-  <% if comment.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
-
-      <ul>
-        <% comment.errors.each do |error| %>
+<% ticket = local_assigns[:ticket] || @comment&.ticket %>
+<%= form_with(model: [@comment.ticket, @comment]) do |form| %>
+  <% if @comment.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h3 class="h6 mb-2"><%= pluralize(@comment.errors.count, "erro") %> impediram a criação do comentário:</h3>
+      <ul class="mb-0 ps-3">
+        <% @comment.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+  <div class="mb-3">
+    <%= form.label :content, "Comentário", class: "form-label" %>
+    <%= form.textarea :content, rows: 5, class: "form-control", placeholder: "Digite seu comentário aqui...", required: true %>
   </div>
 
-  <div>
-    <%= form.label :ticket_id, style: "display: block" %>
-    <%= form.text_field :ticket_id %>
-  </div>
-
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.textarea :content %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="d-flex gap-2">
+    <%= form.submit "Enviar comentário", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", @comment.ticket, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>

@@ -1,11 +1,33 @@
-<% content_for :title, "New ticket status" %>
+<%= turbo_frame_tag "modal_container" do %>
+  <%# 
+    Reaproveitamos a mesma lógica do seu controller JS:
+    Conecta o modal, define auto-open como true e aponta o target
+  %>
+  <div class="modal fade" 
+       id="newTicketModal" 
+       tabindex="-1" 
+       aria-labelledby="newTicketModalLabel" 
+       aria-hidden="true" 
+       data-controller="modal"
+       data-modal-auto-open-value="true"
+      data-modal-close-path-value="<%= ticket_statuses_path %>"
+       data-modal-target="modal">
+       
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="newTicketModalLabel">Novo Status de Ticket</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        
+        <div class="modal-body">
+          <%# O formulário renderizado aqui já está configurado com data: { turbo_frame: "_top" } 
+              que fizemos na etapa anterior, então o redirect de sucesso vai funcionar perfeitamente %>
+          <%= render "form", ticket_status: @ticket_status %>
+        </div>
 
-<h1>New ticket status</h1>
-
-<%= render "form", ticket_status: @ticket_status %>
-
-<br>
-
-<div>
-  <%= link_to "Back to ticket statuses", ticket_statuses_path %>
-</div>
+      </div>
+    </div>
+  </div>
+<% end %>

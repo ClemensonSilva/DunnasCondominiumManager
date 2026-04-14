@@ -1,12 +1,3 @@
-<% content_for :title, "Editing scope" %>
-
-<h1>Editing scope</h1>
-
-<%= render "form", scope: @scope %>
-
-<br>
-
-<div>
-  <%= link_to "Show this scope", @scope %> |
-  <%= link_to "Back to scopes", scopes_path %>
-</div>
+<%= render layout: "shared/modal", locals: { title: "Editar Escopo", close_path: scopes_path } do %>
+  <%= render "form", scope: @scope %>
+<% end %>

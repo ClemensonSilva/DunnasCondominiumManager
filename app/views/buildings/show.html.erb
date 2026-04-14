@@ -1,10 +1,11 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @building.name %>
 
-<%= render @building %>
+<%= render "buildings/layouts/show_header" %>
+<%= render "buildings/layouts/show_summary_accordion" %>
 
-<div>
-  <%= link_to "Edit this building", edit_building_path(@building) %> |
-  <%= link_to "Back to buildings", buildings_path %>
+<% if current_user&.admin? %>
+  <%= render "buildings/layouts/show_admin_kpis" %>
+  <%= render "buildings/layouts/show_admin_insights_accordion" %>
+<% end %>
 
-  <%= button_to "Destroy this building", @building, method: :delete %>
-</div>
+<%= render "buildings/layouts/show_tickets_section" %>

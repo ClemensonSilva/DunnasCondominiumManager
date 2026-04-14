@@ -1,0 +1,8 @@
+<div class="modal-footer d-flex justify-content-between gap-2">
+  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-outline-primary" data-ticket-wizard-target="backButton" data-action="ticket-wizard#back">Voltar</button>
+    <button type="button" class="btn btn-primary" data-ticket-wizard-target="nextButton" data-action="ticket-wizard#next">Continuar</button>
+    <%= form.submit "Confirmar e salvar", class: "btn btn-success d-none", data: { ticket_wizard_target: "submitButton", action: "ticket-wizard#submit" } %>
+  </div>
+</div>

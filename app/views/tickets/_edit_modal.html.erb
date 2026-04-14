@@ -1,0 +1,75 @@
+<div
+  data-controller="modal"
+  data-modal-auto-open-value="<%= local_assigns[:auto_open] ? 'true' : 'false' %>"
+  data-modal-close-path-value="<%= tickets_path %>"
+>
+  <div class="modal fade" id="ticketEditModal" tabindex="-1" aria-labelledby="ticketEditModalLabel" aria-hidden="true" data-modal-target="modal">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="ticketEditModalLabel">Editar ticket</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <%= form_with model: ticket, class: "modal-body" do |form| %>
+          <% if ticket.errors.any? %>
+            <div class="alert alert-danger" role="alert">
+              <h3 class="h6 mb-2"><%= pluralize(ticket.errors.count, "erro") %> impediram a atualizacao:</h3>
+              <ul class="mb-0 ps-3">
+                <% ticket.errors.each do |error| %>
+                  <li><%= error.full_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <%= form.label :apartment_id, "Apartamento", class: "form-label" %>
+              <%= form.collection_select :apartment_id, @edit_apartment_options, :id, :identificator, { prompt: "Selecione" }, class: "form-select", required: true %>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <%= form.label :ticket_type_id, "Tipo de reparo", class: "form-label" %>
+              <%= form.collection_select :ticket_type_id, @edit_ticket_type_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <%= form.label :ticket_status_id, "Status", class: "form-label" %>
+              <%= form.collection_select :ticket_status_id, @edit_ticket_status_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <%= form.label :finished_at, "Data de finalizacao", class: "form-label" %>
+              <%= form.datetime_local_field :finished_at, class: "form-control" %>
+            </div>
+
+            <div class="col-12">
+              <%= form.label :title, "Titulo", class: "form-label" %>
+              <%= form.text_field :title, class: "form-control", required: true %>
+            </div>
+
+            <div class="col-12">
+              <%= form.label :description, "Descricao", class: "form-label" %>
+              <%= form.text_area :description, rows: 5, class: "form-control", required: true %>
+            </div>
+
+            <div class="col-12">
+              <%= form.label :attachments, "Anexos", class: "form-label" %>
+              <%= form.text_field :attachments, class: "form-control" %>
+            </div>
+          </div>
+
+          <div class="modal-footer px-0 pb-0 mt-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <%= form.submit "Salvar alteracoes", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-outline-primary" data-action="modal#open">
+    Editar ticket
+  </button>
+</div>

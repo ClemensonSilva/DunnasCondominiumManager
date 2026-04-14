@@ -1,0 +1,18 @@
+<div data-ticket-wizard-target="step">
+  <div class="card border-0 bg-light-subtle">
+    <div class="card-body p-4">
+      <h3 class="h6 mb-3">Etapa 1. Onde o problema acontece?</h3>
+      <div class="row g-3">
+        <div class="col-12 col-lg-6">
+          <%= form.label :apartment_id, "Apartamento", class: "form-label" %>
+          <%= form.select :apartment_id, options_for_select(@apartment_options || [], ticket.apartment_id), { prompt: "Selecione o apartamento" }, class: "form-select", required: true %>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <%= form.label :ticket_type_id, "Tipo de chamado", class: "form-label" %>
+          <%= form.select :ticket_type_id, options_for_select(@ticket_type_options || [], ticket.ticket_type_id), { prompt: "Selecione o tipo" }, class: "form-select", required: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,16 +1,46 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Status de Tickets" %>
 
-<% content_for :title, "Ticket statuses" %>
+<%= render "shared/page_header", 
+           title: "Status de Tickets", 
+           buttons: capture { %>
+             <%= link_to "+ Novo Status", new_ticket_status_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
+           <% } %>
 
-<h1>Ticket statuses</h1>
 
-<div id="ticket_statuses">
-  <% @ticket_statuses.each do |ticket_status| %>
-    <%= render ticket_status %>
-    <p>
-      <%= link_to "Show this ticket status", ticket_status %>
-    </p>
+<div id="ticket_statuses" class="row g-4">
+  
+  <% if @ticket_statuses.any? %>
+    <% @ticket_statuses.each do |ticket_status| %>
+      <div class="col-12 col-md-6 col-lg-4">
+        
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="card-text text-secondary mb-3">
+              <%= render ticket_status %>
+            </div>
+          </div>
+          
+          <div class="card-footer bg-transparent border-top-0 pt-0">
+  <%= link_to "Editar Ticket", 
+              edit_ticket_status_path(ticket_status), 
+              data: { turbo_frame: "modal_container" }, 
+              class: "btn btn-outline-secondary btn-sm w-100" %> 
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+  <% else %>
+    <div class="col-12">
+      <div class="text-center p-5 bg-light rounded border border-dashed">
+        <h3 class="h5 text-muted">Nenhum status de ticket encontrado.</h3>
+        <p class="text-muted mb-4">Comece adicionando um novo status para o seu sistema.</p>
+        <%= link_to "Criar o primeiro Status", 
+            new_ticket_status_path, 
+            data: { turbo_frame: "modal_container" }, 
+            class: "btn btn-outline-primary" %>   
+        </div>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New ticket status", new_ticket_status_path %>
+</div>

@@ -1,9 +1,25 @@
 class UsersController < ApplicationController
+  load_and_authorize_resource
   before_action :set_user, only: %i[ show edit update destroy ]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users_title = "Usuarios"
+    @users = users_scope
+  end
+
+  def residents
+    authorize! :read, User
+    @users_title = "Residentes"
+    @users = User.residents
+    render :index
+  end
+
+  def colaborators
+    authorize! :read, User
+    @users_title = "Colaboradores"
+    @users = User.colaborators 
+    render :index
   end
 
   # GET /users/1 or /users/1.json
@@ -65,6 +81,14 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.expect(user: [ :name, :email, :user_type, :password_digest ])
+      if current_user&.admin?
+        params.expect(user: [ :name, :email, :user_type, :password, :password_confirmation, { scope_ids: [], apartment_ids: [] } ])
+      else
+        params.expect(user: [ :name, :email, :password, :password_confirmation ])
+      end
+    end
+
+    def users_scope
+      User.accessible_by(current_ability, :read).includes(:scopes, :apartments)
     end
 end

@@ -1,37 +1,36 @@
-<%= form_with(model: building) do |form| %>
-  <% if building.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(building.errors.count, "error") %> prohibited this building from being saved:</h2>
+<%= form_with(model: building, class: "needs-validation", data: { turbo_frame: "_top" }) do |form| %>
+  
+  <div class="modal-body p-4">
+    <% if building.errors.any? %>
+      <div class="alert alert-danger shadow-sm" role="alert">
+        <h2 class="h6 mb-2"><%= pluralize(building.errors.count, "erro") %> impediram este prédio de ser salvo:</h2>
+        <ul class="mb-0 ps-3">
+          <% building.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-      <ul>
-        <% building.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="mb-3">
+      <%= form.label :name, "Nome do prédio", class: "form-label fw-medium" %>
+      <%= form.text_field :name, class: "form-control", placeholder: "Ex.: Edifício Dunnas I" %>
     </div>
-  <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <%= form.label :apartments_per_floor, "Apartamentos por andar", class: "form-label fw-medium" %>
+        <%= form.number_field :apartments_per_floor, class: "form-control", min: 1 %>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <%= form.label :number_of_floors, "Número de andares", class: "form-label fw-medium" %>
+        <%= form.number_field :number_of_floors, class: "form-control", min: 1 %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :condominium_id, style: "display: block" %>
-    <%= form.text_field :condominium_id %>
-  </div>
-
-  <div>
-    <%= form.label :number_of_apartments, style: "display: block" %>
-    <%= form.number_field :number_of_apartments %>
-  </div>
-
-  <div>
-    <%= form.label :number_of_floors, style: "display: block" %>
-    <%= form.number_field :number_of_floors %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="modal-footer bg-light d-flex justify-content-end gap-2">
+<%= link_to "Cancelar", buildings_path, class: "btn btn-outline-secondary", data: { bs_dismiss: "modal" } %>    <%= form.submit "Salvar", class: "btn btn-primary px-4 fw-semibold" %>
   </div>
 <% end %>

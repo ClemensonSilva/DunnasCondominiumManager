@@ -1,0 +1,45 @@
+<div class="container py-5 bg-white">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header text-white py-3" style="background-color: #1b4d5c;">
+          <h1 class="h4 mb-0">Dunnas Condominium</h1>
+          <p class="mb-0 small text-white-50">Acesso ao painel de operacao</p>
+        </div>
+
+        <div class="card-body p-4">
+          <h2 class="h5 mb-3">Entrar</h2>
+
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <div class="mb-3">
+              <%= f.label :email, "E-mail", class: "form-label" %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control py-2", placeholder: "nome@empresa.com" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, "Senha", class: "form-label" %>
+              <%= f.password_field :password, autocomplete: "current-password", class: "form-control py-2", placeholder: "Digite sua senha" %>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="form-check mb-3">
+                <%= f.check_box :remember_me, class: "form-check-input" %>
+                <%= f.label :remember_me, "Lembrar de mim", class: "form-check-label" %>
+              </div>
+            <% end %>
+
+            <div class="d-grid mb-3">
+              <%= f.submit "Entrar", class: "btn text-white fw-semibold py-2", style: "background-color: #1b4d5c;" %>
+            </div>
+          <% end %>
+
+          <div class="d-grid gap-1 small">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

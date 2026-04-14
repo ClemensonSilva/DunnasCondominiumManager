@@ -33,7 +33,6 @@ services:
   adminer:
     image: adminer
     restart: always
-    profiles: ["tools"]
     ports:
       - 8080:8080
  

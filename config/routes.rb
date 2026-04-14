@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
-  resources :comments
-  resources :tickets
+  devise_for :users
+  resources :tickets do
+    resources :comments
+  end
   resources :scopes
   resources :ticket_statuses
   resources :buildings
-  resources :condominia
-  resources :users
+  resources :users do
+    collection do
+      get :residents
+      get :colaborators
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -16,6 +22,11 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  authenticated :user do
+    root "buildings#index", as: :authenticated_root
+  end
+
+  unauthenticated do
+    root "home#index", as: :unauthenticated_root
+  end
 end

@@ -1,16 +1,21 @@
-<p style="color: green"><%= notice %></p>
-
-<% content_for :title, "Scopes" %>
-
-<h1>Scopes</h1>
-
-<div id="scopes">
-  <% @scopes.each do |scope| %>
-    <%= render scope %>
-    <p>
-      <%= link_to "Show this scope", scope %>
-    </p>
+<%# Use row-cols-lg-3 para forçar 3 cards por linha no desktop, exatamente como na sua imagem %>
+<%= render "shared/page_header", 
+           title: "Escopos", 
+           buttons: capture { %>
+             <%= link_to "+ Novo Escopo", new_scope_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
+           <% } %>
+<div id="scopes" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-3">
+  
+  <% if @scopes.any? %>
+    <% @scopes.each do |scope| %>
+      <div class="col">
+        <%= render scope %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="col-12">
+      <p class="text-muted">Nenhum escopo encontrado.</p>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New scope", new_scope_path %>
+</div>

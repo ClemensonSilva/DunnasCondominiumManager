@@ -1,12 +1,30 @@
-<% content_for :title, "Editing ticket status" %>
+<%= turbo_frame_tag "modal_container" do %>
+  
+  
+  <div class="modal fade" 
+       id="editTicketModal" 
+       tabindex="-1" 
+       aria-labelledby="editTicketModalLabel" 
+       aria-hidden="true" 
+       data-controller="modal"
+       data-modal-auto-open-value="true"
+      data-modal-close-path-value="<%= ticket_statuses_path %>"
+       data-modal-target="modal">
+       
+    <div class="modal-dialog">
+      <div class="modal-content">
+        
+        <div class="modal-header">
+          <h5 class="modal-title" id="editTicketModalLabel">Editar Status de Ticket</h5>
+          <%# O botão padrão do Bootstrap fechará o modal sem problemas %>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        
+        <div class="modal-body">
+          <%= render "form", ticket_status: @ticket_status %>
+        </div>
 
-<h1>Editing ticket status</h1>
-
-<%= render "form", ticket_status: @ticket_status %>
-
-<br>
-
-<div>
-  <%= link_to "Show this ticket status", @ticket_status %> |
-  <%= link_to "Back to ticket statuses", ticket_statuses_path %>
-</div>
+      </div>
+    </div>
+  </div>
+<% end %>

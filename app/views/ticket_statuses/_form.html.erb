@@ -1,27 +1,45 @@
-<%= form_with(model: ticket_status) do |form| %>
+<%= form_with(model: ticket_status, data: { turbo_frame: "_top" }, class: "needs-validation") do |form| %>
+  
   <% if ticket_status.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(ticket_status.errors.count, "error") %> prohibited this ticket_status from being saved:</h2>
-
-      <ul>
-        <% ticket_status.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="alert alert-danger d-flex align-items-center shadow-sm mb-4" role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </svg>
+      <div>
+        <strong>Não foi possível salvar o status:</strong> verifique os <%= ticket_status.errors.count %> erros abaixo.
+      </div>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="mb-4">
+    <%= form.label :title, "Nome do Status", class: "form-label fw-bold text-dark" %>
+    <%= form.text_field :title, 
+                        class: "form-control form-control-lg #{'is-invalid' if ticket_status.errors[:title].any?}", 
+                        placeholder: "Ex: Em Andamento, Resolvido..." %>
+    
+    <% if ticket_status.errors[:title].any? %>
+      <div class="invalid-feedback">
+        <%= ticket_status.errors.full_messages_for(:title).first %>
+      </div>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.label :is_default, style: "display: block" %>
-    <%= form.checkbox :is_default %>
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="pe-3">
+        <%= form.label :is_default, "Status padrão?", class: "fw-bold text-dark mb-1" %>
+        <div class="form-text text-muted mt-0">Novos tickets criados receberão este status automaticamente.</div>
+      </div>
+      
+      <div class="form-check form-switch fs-4 mb-0 ps-0">
+        <%= form.check_box :is_default, class: "form-check-input float-none m-0", role: "switch" %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top">
+    <button  type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+    <%= form.submit "Salvar Status", class: "btn btn-primary px-4 fw-semibold" , redirect: ticket_statuses_path %>
   </div>
+  
 <% end %>

@@ -1,0 +1,37 @@
+<% modal_id = local_assigns.fetch(:modal_id, "ticketWizardModal") %>
+<% modal_label_id = "#{modal_id}Label" %>
+<% auto_calculate_finished_at = local_assigns.fetch(:auto_calculate_finished_at, true) %>
+
+<div
+  class="modal fade"
+  id="<%= modal_id %>"
+  tabindex="-1"
+  aria-labelledby="<%= modal_label_id %>"
+  aria-hidden="true"
+  data-controller="ticket-wizard"
+  data-ticket-wizard-sla-map-value="<%= (@ticket_type_sla_map || {}).to_json %>"
+  data-ticket-wizard-auto-calculate-finished-at-value="<%= auto_calculate_finished_at %>"
+  data-action="input->ticket-wizard#refreshSummary change->ticket-wizard#refreshSummary"
+>
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header align-items-start">
+        <div>
+          <h2 class="modal-title fs-5 mb-1" id="<%= modal_label_id %>">Assistente de chamado</h2>
+          <p class="text-secondary mb-0">Preencha o chamado em etapas e confirme no final.</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body">
+        <%= render "tickets/wizard/progress" %>
+        <%= render "tickets/wizard/step_location", form: form, ticket: ticket %>
+        <%= render "tickets/wizard/step_description", form: form, ticket: ticket %>
+        <%= render "tickets/wizard/step_complementary", form: form, ticket: ticket %>
+        <%= render "tickets/wizard/step_review", form: form, ticket: ticket %>
+      </div>
+
+      <%= render "tickets/wizard/footer_actions", form: form %>
+    </div>
+  </div>
+</div>

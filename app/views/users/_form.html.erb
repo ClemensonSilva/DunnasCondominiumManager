@@ -21,14 +21,31 @@
     <%= form.text_field :email %>
   </div>
 
+  <% if current_user&.admin? %>
+    <div>
+      <%= form.label :user_type, "Tipo de usuario", style: "display: block" %>
+      <%= form.select :user_type, User.user_types.keys.reject { |type| type == "admin" }.map { |type| [type.humanize, type] }, include_blank: "Selecione" %>
+    </div>
+
+    <div>
+      <%= form.label :scope_ids, "Escopos (para colaborador)", style: "display: block" %>
+      <%= form.collection_select :scope_ids, Scope.all, :id, :title, {}, multiple: true, size: 5 %>
+    </div>
+
+    <div>
+      <%= form.label :apartment_ids, "Apartamentos (para morador)", style: "display: block" %>
+      <%= form.collection_select :apartment_ids, Apartment.all, :id, :identificator, {}, multiple: true, size: 6 %>
+    </div>
+  <% end %>
+
   <div>
-    <%= form.label :user_type, style: "display: block" %>
-    <%= form.number_field :user_type %>
+    <%= form.label :password, style: "display: block" %>
+    <%= form.password_field :password %>
   </div>
 
   <div>
-    <%= form.label :password_digest, style: "display: block" %>
-    <%= form.text_field :password_digest %>
+    <%= form.label :password_confirmation, style: "display: block" %>
+    <%= form.password_field :password_confirmation %>
   </div>
 
   <div>
