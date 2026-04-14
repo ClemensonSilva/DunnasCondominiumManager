@@ -4,13 +4,48 @@ class BuildingsController < ApplicationController
 
   # GET /buildings or /buildings.json
   def index
-    @buildings = Building.all
+    if current_user&.admin?
+          @buildings = Building.all
+    end
+
+    if current_user.resident?
+      @buildings = User.find(current_user.id).buildings_of_resident
+    end
+    if current_user.colaborator?
+      scope = User.find(current_user.id).scopes.first
+      @buildings = Building.joins(:tickets)
+                           .where(tickets: { scope_id: scope.id })
+                           .distinct
+
+    end
+  end
+  # GET /buildings/search_by_name usado pelo Stimulus para buscar por nome
+  def search_by_name
+    @buildings = Building.search_by_name(params[:name])
+    render :index
   end
 
   # GET /buildings/1 or /buildings/1.json
   def show
-    @tickets = Building.tickets_for_show(@building.id)
-    @residents_count = Building.residents_count_for(@building.id)
+    stats = BuildingStatistics.new(@building)
+
+    @tickets = stats.tickets_for_show
+    @tickets_count = @tickets.size
+    @residents_count = stats.residents_count
+
+    return unless current_user&.admin?
+
+    @total_apartments = stats.total_apartments
+    @occupied_apartments_count = stats.occupied_apartments_count
+    @occupancy_rate = stats.occupancy_rate
+    @closed_tickets_count = stats.closed_tickets_count(@tickets)
+    @open_tickets_count = stats.open_tickets_count(@tickets)
+    @overdue_tickets_count = stats.overdue_tickets_count(@tickets)
+    @average_resolution_hours = stats.average_resolution_hours(@tickets)
+    @top_ticket_types = stats.top_ticket_types(3, @tickets)
+    @collaborator_activity = stats.collaborator_activity(3, @tickets)
+    @last_ticket_created_at = stats.last_ticket_created_at(@tickets)
+    @last_ticket_updated_at = stats.last_ticket_updated_at(@tickets)
   end
 
   # GET /buildings/new

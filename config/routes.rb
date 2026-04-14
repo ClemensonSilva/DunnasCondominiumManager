@@ -1,19 +1,8 @@
 Rails.application.routes.draw do
-  namespace :admin do
-      resources :apartments
-      resources :buildings
-      resources :comments
-      resources :scopes
-      resources :tickets
-      resources :ticket_statuses
-      resources :ticket_types
-      resources :users
-
-      root to: "apartments#index"
-    end
   devise_for :users
-  resources :comments
-  resources :tickets
+  resources :tickets do
+    resources :comments
+  end
   resources :scopes
   resources :ticket_statuses
   resources :buildings
