@@ -73,7 +73,12 @@
     </div>
   </div>
 
-  <% if can? :destroy, @ticket %>
-    <%= button_to "Excluir ticket", @ticket, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: "Tem certeza que deseja excluir este ticket?" } } %>
-  <% end %>
+  <div class="d-flex flex-wrap gap-2">
+    <% if can? :destroy, @ticket %>
+      <%= button_to "Excluir ticket", @ticket, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: "Tem certeza que deseja excluir este ticket?" } } %>
+    <% end %>
+    <% if can? :create, Comment %>
+      <%= link_to "Adicionar comentário", new_ticket_comment_path(@ticket), class: "btn btn-outline-primary" %>
+    <% end %>
+  </div>
 </section>

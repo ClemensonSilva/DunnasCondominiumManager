@@ -1,0 +1,48 @@
+<div data-controller="modal" data-modal-auto-open-value="false">
+  <div class="modal fade" id="buildingEditModal-<%= building.id %>" tabindex="-1" aria-labelledby="buildingEditModalLabel-<%= building.id %>" aria-hidden="true" data-modal-target="modal">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="buildingEditModalLabel-<%= building.id %>">Editar prédio</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <%= form_with(model: building, class: "modal-body") do |form| %>
+          <% if building.errors.any? %>
+            <div class="alert alert-danger" role="alert">
+              <h2 class="h6 mb-2"><%= pluralize(building.errors.count, "erro") %> impediram este prédio de ser salvo:</h2>
+              <ul class="mb-0 ps-3">
+                <% building.errors.each do |error| %>
+                  <li><%= error.full_message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= form.label :name, "Nome do prédio", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control", placeholder: "Ex.: Edifício Dunnas I" %>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <%= form.label :apartments_per_floor, "Apartamentos por andar", class: "form-label" %>
+              <%= form.number_field :apartments_per_floor, class: "form-control", min: 1 %>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <%= form.label :number_of_floors, "Número de andares", class: "form-label" %>
+              <%= form.number_field :number_of_floors, class: "form-control", min: 1 %>
+            </div>
+          </div>
+
+          <div class="modal-footer mt-4">
+            <%= form.submit "Salvar", class: "btn btn-primary" %>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

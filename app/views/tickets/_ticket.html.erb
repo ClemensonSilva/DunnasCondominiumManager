@@ -1,23 +1,26 @@
-<article id="<%= dom_id ticket %>" class="card border-0 shadow-sm h-100">
-  <div class="card-body">
-    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
-      <h2 class="h6 mb-0"><%= ticket.title.presence || "Chamado sem titulo" %></h2>
-      <% status_title = ticket.ticket_status&.title || "Sem status" %>
-      <span class="badge <%= ticket_status_badge_class(status_title) %>"><%= status_title %></span>
+<div data-controller="modal">
+  <article id="<%= dom_id ticket %>" class="card border-0 shadow-sm h-100">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+        <h2 class="h6 mb-0"><%= ticket.title.presence || "Chamado sem titulo" %></h2>
+        <% status_title = ticket.ticket_status&.title || "Sem status" %>
+        <span class="badge <%= ticket_status_badge_class(status_title) %>"><%= status_title %></span>
+      </div>
+
+      <p class="mb-1">
+        <span class="text-secondary">Apartamento:</span>
+        <strong><%= ticket.apartment&.identificator || "-" %></strong>
+      </p>
+
+      <p class="mb-3">
+        <span class="text-secondary">Tipo de reparo:</span>
+        <strong><%= ticket.ticket_type&.title || "-" %></strong>
+      </p>
+
+      <div>
+        <%= link_to "Ver detalhes", ticket_path(ticket), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary" %>
+        <%= link_to "Ver comentários", ticket_comments_path(ticket), class: "btn btn-sm btn-outline-secondary" %>
+      </div>
     </div>
-
-    <p class="mb-1">
-      <span class="text-secondary">Apartamento:</span>
-      <strong><%= ticket.apartment&.identificator || "-" %></strong>
-    </p>
-
-    <p class="mb-3">
-      <span class="text-secondary">Tipo de reparo:</span>
-      <strong><%= ticket.ticket_type&.title || "-" %></strong>
-    </p>
-
-    <div>
-      <%= link_to "Ver detalhes", ticket_path(ticket), class: "btn btn-sm btn-outline-primary" %>
-    </div>
-  </div>
-</article>
+  </article>
+</div>
