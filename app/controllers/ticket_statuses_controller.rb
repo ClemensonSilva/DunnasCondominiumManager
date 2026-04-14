@@ -26,11 +26,9 @@ class TicketStatusesController < ApplicationController
 
     respond_to do |format|
       if @ticket_status.save
-        format.html { redirect_to @ticket_status, notice: "Ticket status was successfully created." }
-        format.json { render :show, status: :created, location: @ticket_status }
+        format.html { redirect_to ticket_statuses_path, notice: "Status criado com sucesso." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ticket_status.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -39,11 +37,9 @@ class TicketStatusesController < ApplicationController
   def update
     respond_to do |format|
       if @ticket_status.update(ticket_status_params)
-        format.html { redirect_to @ticket_status, notice: "Ticket status was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @ticket_status }
+        format.html { redirect_to ticket_statuses_path, notice: "Status de Ticket atualizado com sucesso!", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @ticket_status.errors, status: :unprocessable_entity }
       end
     end
   end
