@@ -1,4 +1,4 @@
-<%= form_with(model: scope) do |form| %>
+<%= form_with(model: scope, data: { turbo_frame: "_top" }) do |form| %>
   <% if scope.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(scope.errors.count, "error") %> prohibited this scope from being saved:</h2>

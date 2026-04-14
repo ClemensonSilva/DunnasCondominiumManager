@@ -1,16 +1,12 @@
 <% content_for :title, "Tickets" %>
 
 <section class="container-fluid px-0">
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-      <div>
-        <h1 class="h3 mb-1">Tickets</h1>
-        <p class="text-secondary mb-0">Acompanhe o andamento dos chamados em aberto e concluidos.</p>
-      </div>
-      <%= link_to "Novo ticket", new_ticket_path, class: "btn btn-primary" %>
-    </div>
-  </div>
-
+  <%= render "shared/page_header", 
+           title: "Tickets", 
+           subtitle: "Visao geral dos tickets cadastrados.",
+           buttons: capture { %>
+             <%= link_to "+ Novo Ticket", new_ticket_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
+           <% } %>  
   <% if @tickets.any? %>
     <div id="tickets" class="row g-3">
       <% @tickets.each do |ticket| %>

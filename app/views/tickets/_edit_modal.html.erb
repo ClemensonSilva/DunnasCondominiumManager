@@ -1,6 +1,7 @@
 <div
   data-controller="modal"
   data-modal-auto-open-value="<%= local_assigns[:auto_open] ? 'true' : 'false' %>"
+  data-modal-close-path-value="<%= tickets_path %>"
 >
   <div class="modal fade" id="ticketEditModal" tabindex="-1" aria-labelledby="ticketEditModalLabel" aria-hidden="true" data-modal-target="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">

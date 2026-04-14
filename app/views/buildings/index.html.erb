@@ -1,12 +1,12 @@
 <% content_for :title, "Buildings" %>
 
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-  <div>
-    <h1 class="h2 mb-1">Buildings</h1>
-    <p class="text-secondary mb-0">Visao geral dos predios cadastrados.</p>
-  </div>
-  <%= link_to "New building", new_building_path, class: "btn btn-primary" %>
-</div>
+<%= render "shared/page_header", 
+           title: "Predios", 
+           subtitle: "Visao geral dos predios cadastrados.",
+           buttons: capture { %>
+             <%= link_to "+ Novo Predio", new_building_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
+           <% } %>
+
 
 <div class="mb-4">
   <%= render "layouts/search", path: buildings_path, placeholder: "Exemplo: Canário Verde" %>

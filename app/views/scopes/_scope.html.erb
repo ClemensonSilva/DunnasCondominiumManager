@@ -1,7 +1,18 @@
-<div id="<%= dom_id scope %>">
-  <div>
-    <strong>Title:</strong>
-    <%= scope.title %>
+<div id="<%= dom_id scope %>" class="card shadow-sm border-0 h-100">
+  
+  <%# Corpo do card com padding generoso e o texto alinhado como na imagem %>
+  <div class="card-body p-4">
+    <div class="card-text text-secondary fs-5">
+      <strong class="text-dark">Title:</strong> <%= scope.title %>
+    </div>
+  </div>
+
+  <%# Rodapé sem borda, contendo apenas o botão largo de edição %>
+  <div class="card-footer bg-transparent border-top-0 px-4 pb-4 pt-0">
+    <%= link_to "Editar Escopo", 
+                edit_scope_path(scope), 
+                data: { turbo_frame: "modal_container" }, 
+                class: "btn btn-outline-secondary w-100" %>
   </div>
 
 </div>

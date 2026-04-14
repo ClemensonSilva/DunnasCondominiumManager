@@ -1,10 +1,10 @@
 <% content_for :title, @users_title || "Usuarios" %>
 
 <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-  <div>
-    <h1 class="h2 mb-1"><%= @users_title || "Usuarios" %></h1>
-    <p class="text-secondary mb-0">Gerenciamento de usuarios por perfil.</p>
-  </div>
+  <%= render "shared/page_header", 
+           title: "Gerenciamento de Usuarios", 
+           subtitle: "Visao geral dos usuarios cadastrados."
+          %>
 
   <div class="d-flex flex-wrap gap-2">
     <%= link_to "Todos", users_path, class: "btn #{action_name == 'index' ? 'btn-primary' : 'btn-outline-primary'}" %>
