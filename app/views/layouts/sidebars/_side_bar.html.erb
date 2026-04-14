@@ -9,11 +9,11 @@
 
 		<nav class="nav nav-pills flex-column gap-1" aria-label="Operacao">
 			<% if current_user.admin? %>
-				<%= render "layouts/side_bar_admin" %>
+				<%= render "layouts/sidebars/side_bar_admin" %>
 			<% elsif current_user.colaborator? %>
-				<%= render "layouts/side_bar_colaborator" %>
+				<%= render "layouts/sidebars/side_bar_colaborator" %>
 			<% else %>
-				<%= render "layouts/side_bar_resident" %>
+				<%= render "layouts/sidebars/side_bar_resident" %>
 			<% end %>
 		</nav>
 	</div>

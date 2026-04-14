@@ -1,0 +1,28 @@
+<section class="row g-3 mb-4">
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Chamados abertos</p>
+        <p class="h4 mb-0"><%= @open_tickets_count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Chamados finalizados</p>
+        <p class="h4 mb-0"><%= @closed_tickets_count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <p class="text-secondary mb-1">SLA vencido</p>
+        <p class="h4 mb-0"><%= @overdue_tickets_count %></p>
+      </div>
+    </div>
+  </div>
+</section>

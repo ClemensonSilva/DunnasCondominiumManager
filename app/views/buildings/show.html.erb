@@ -1,61 +1,11 @@
 <% content_for :title, @building.name %>
 
-<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
-	<div>
-		<h1 class="h2 mb-1"><%= @building.name %></h1>
-		<p class="text-secondary mb-0">Detalhes gerais e chamados relacionados ao predio.</p>
-	</div>
+<%= render "buildings/layouts/show_header" %>
+<%= render "buildings/layouts/show_summary_accordion" %>
 
-	<div class="d-flex flex-wrap gap-2">
-		<%= link_to "Voltar", buildings_path, class: "btn btn-outline-secondary" %>
-		<%= link_to "Editar predio", edit_building_path(@building), class: "btn btn-primary" %>
-	</div>
-</div>
+<% if current_user&.admin? %>
+  <%= render "buildings/layouts/show_admin_kpis" %>
+  <%= render "buildings/layouts/show_admin_insights_accordion" %>
+<% end %>
 
-<section class="row g-3 mb-4">
-	<div class="col-12 col-md-4">
-		<div class="card border-0 shadow-sm h-100">
-			<div class="card-body">
-				<p class="text-secondary mb-1">Apartamentos por andar</p>
-				<p class="h4 mb-0"><%= @building.apartments_per_floor %></p>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-12 col-md-4">
-		<div class="card border-0 shadow-sm h-100">
-			<div class="card-body">
-				<p class="text-secondary mb-1">Numero de andares</p>
-				<p class="h4 mb-0"><%= @building.number_of_floors %></p>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-12 col-md-4">
-		<div class="card border-0 shadow-sm h-100">
-			<div class="card-body">
-				<p class="text-secondary mb-1">Residentes</p>
-				<p class="h4 mb-0"><%= @residents_count %></p>
-			</div>
-		</div>
-	</div>
-</section>
-
-<section>
-	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h2 class="h4 mb-0">Chamados do predio</h2>
-		<span class="badge text-bg-light border"><%= @tickets_count %> chamados</span>
-	</div>
-
-	<% if @tickets.any? %>
-		<div class="row g-3">
-			<%= render partial: "ticket_card", collection: @tickets, as: :ticket %>
-		</div>
-	<% else %>
-		<div class="card border-0 shadow-sm">
-			<div class="card-body py-4 text-secondary">
-				Nenhum chamado relacionado a este predio ate o momento.
-			</div>
-		</div>
-	<% end %>
-</section>
+<%= render "buildings/layouts/show_tickets_section" %>
