@@ -1,16 +1,31 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Tickets" %>
 
-<h1>Tickets</h1>
+<section class="container-fluid px-0">
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <h1 class="h3 mb-1">Tickets</h1>
+        <p class="text-secondary mb-0">Acompanhe o andamento dos chamados em aberto e concluidos.</p>
+      </div>
+      <%= link_to "Novo ticket", new_ticket_path, class: "btn btn-primary" %>
+    </div>
+  </div>
 
-<div id="tickets">
-  <% @tickets.each do |ticket| %>
-    <%= render ticket %>
-    <p>
-      <%= link_to "Show this ticket", ticket %>
-    </p>
+  <% if @tickets.any? %>
+    <div id="tickets" class="row g-3">
+      <% @tickets.each do |ticket| %>
+        <div class="col-12 col-md-6 col-xl-4">
+          <%= render ticket %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <h2 class="h5 mb-2">Nenhum chamado encontrado</h2>
+        <p class="text-secondary mb-3">Crie o primeiro ticket para iniciar o acompanhamento.</p>
+        <%= link_to "Criar ticket", new_ticket_path, class: "btn btn-outline-primary" %>
+      </div>
+    </div>
   <% end %>
-</div>
-
-<%= link_to "New ticket", new_ticket_path %>
+</section>

@@ -20,7 +20,6 @@ export default class extends Controller {
   ]
 
   static values = {
-    autoOpen: Boolean,
     autoCalculateFinishedAt: Boolean,
     slaMap: Object
   }
@@ -31,20 +30,10 @@ export default class extends Controller {
     this.element.addEventListener("hidden.bs.modal", this.boundReset)
     this.showStep(0)
     this.refreshSummary()
-
-    if (this.autoOpenValue) {
-      this.open()
-    }
   }
 
   disconnect() {
     this.element.removeEventListener("hidden.bs.modal", this.boundReset)
-  }
-
-  open() {
-    if (window.bootstrap) {
-      window.bootstrap.Modal.getOrCreateInstance(this.element).show()
-    }
   }
 
   next(event) {

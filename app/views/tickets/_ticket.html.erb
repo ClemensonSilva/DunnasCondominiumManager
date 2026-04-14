@@ -1,42 +1,19 @@
-<div id="<%= dom_id ticket %>">
-  <div>
-    <strong>User:</strong>
-    <%= ticket.user&.name %>
-  </div>
+<article id="<%= dom_id ticket %>" class="card border-0 shadow-sm h-100">
+  <div class="card-body">
+    <h2 class="h6 mb-3"><%= ticket.title.presence || "Chamado sem titulo" %></h2>
 
-  <div>
-    <strong>Apartment:</strong>
-    <%= ticket.apartment&.identificator %>
-  </div>
+    <p class="mb-1">
+      <span class="text-secondary">Apartamento:</span>
+      <strong><%= ticket.apartment&.identificator || "-" %></strong>
+    </p>
 
-  <div>
-    <strong>Ticket status:</strong>
-    <%= ticket.ticket_status&.title %>
-  </div>
+    <p class="mb-3">
+      <span class="text-secondary">Tipo de reparo:</span>
+      <strong><%= ticket.ticket_type&.title || "-" %></strong>
+    </p>
 
-  <div>
-    <strong>Ticket type:</strong>
-    <%= ticket.ticket_type_id %>
+    <div>
+      <%= link_to "Ver detalhes", ticket_path(ticket), class: "btn btn-sm btn-outline-primary" %>
+    </div>
   </div>
-
-  <div>
-    <strong>Title:</strong>
-    <%= ticket.title %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= ticket.description %>
-  </div>
-
-  <div>
-    <strong>Attachments:</strong>
-    <%= ticket.attachments %>
-  </div>
-
-  <div>
-    <strong>Finished at:</strong>
-    <%= ticket.finished_at %>
-  </div>
-
-</div>
+</article>
