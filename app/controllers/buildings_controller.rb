@@ -59,10 +59,10 @@ class BuildingsController < ApplicationController
 
   # POST /buildings or /buildings.json
   def create
-    @building = Building.new(building_params)
+    @building = Buildings::Create.new(building_params).call
 
     respond_to do |format|
-      if @building.save
+      if @building.persisted?
         format.html { redirect_to @building, notice: "Building was successfully created." }
         format.json { render :show, status: :created, location: @building }
       else

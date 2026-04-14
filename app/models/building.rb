@@ -5,8 +5,6 @@ class Building < ApplicationRecord
   validates :number_of_floors, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 100 }
   validates :apartments_per_floor, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 10 }
 
-  after_create :creating_apartments
-
   scope :tickets_building, -> { joins(apartments: :tickets).distinct }
   scope :with_residents, -> { joins(apartments: :users).merge(User.residents).distinct }
 
@@ -20,17 +18,4 @@ class Building < ApplicationRecord
   scope :residents, -> { with_residents }
 
   scope :search_by_name, ->(name) { where("name ILIKE ?", "%#{name}%") }
-
-  private
-
-  def creating_apartments
-    (1..number_of_floors).each do |floor|
-      (1..apartments_per_floor).each do |position|
-        apartments << Apartment.new(
-          floor: floor,
-          identificator: "Apartamento #{floor}#{position}"
-        )
-      end
-    end
-  end
 end
