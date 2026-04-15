@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :scopes
   resources :ticket_statuses
   resources :buildings
-  resources :users do
+  resources :users, path: "admin/users" do
     collection do
       get :residents
       get :colaborators

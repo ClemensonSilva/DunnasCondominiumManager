@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   load_and_authorize_resource
   before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :prepare_form_collections, only: %i[ new create edit update ]
 
   # GET /users or /users.json
   def index
@@ -18,7 +19,7 @@ class UsersController < ApplicationController
   def colaborators
     authorize! :read, User
     @users_title = "Colaboradores"
-    @users = User.colaborators 
+    @users = User.colaborators
     render :index
   end
 
@@ -41,11 +42,9 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
+        format.html { redirect_to @user, notice: "Usuario foi criado com sucesso." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,11 +53,9 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @user }
+        format.html { redirect_to @user, notice: "Usuario foi atualizado com sucesso.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -68,8 +65,7 @@ class UsersController < ApplicationController
     @user.destroy!
 
     respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      format.html { redirect_to users_path, notice: "Usuario foi excluido com sucesso.", status: :see_other }
     end
   end
 
@@ -90,5 +86,12 @@ class UsersController < ApplicationController
 
     def users_scope
       User.accessible_by(current_ability, :read).includes(:scopes, :apartments)
+    end
+
+    def prepare_form_collections
+      @available_scopes = Scope.order(:title)
+      @available_apartments = Apartment.joins(:building)
+                                       .includes(:building)
+                                       .order("buildings.name ASC, apartments.identificator ASC")
     end
 end

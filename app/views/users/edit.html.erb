@@ -1,12 +1,17 @@
-<% content_for :title, "Editing user" %>
+<% content_for :title, "Editar usuario" %>
 
-<h1>Editing user</h1>
+<% if turbo_frame_request? %>
+  <%= render layout: "shared/modal", locals: { title: "Editar usuario", close_path: users_path } do %>
+    <%= render "form", user: @user, modal: true %>
+  <% end %>
+<% else %>
+  <%= render "shared/page_header",
+             title: "Editar usuario",
+             subtitle: "Atualize os dados do usuario e suas associacoes por perfil." %>
 
-<%= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
-</div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+      <%= render "form", user: @user, modal: false %>
+    </div>
+  </div>
+<% end %>

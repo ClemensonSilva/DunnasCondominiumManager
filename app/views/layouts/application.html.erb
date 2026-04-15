@@ -43,6 +43,7 @@
             <% end %>
 
             <%= yield %>
+            <%= turbo_frame_tag "modal_container" %>
           </main>
         </div>
       </div>
@@ -60,6 +61,7 @@
         </div>
 
         <%= yield %>
+        <%= turbo_frame_tag "modal_container" %>
       </main>
     <% end %>
   </body>

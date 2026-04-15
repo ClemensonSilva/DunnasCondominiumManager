@@ -1,9 +1,10 @@
-<%= form_with(model: user) do |form| %>
-  <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<% modal = local_assigns.fetch(:modal, false) %>
 
-      <ul>
+<%= form_with(model: user, html: { data: { controller: "user-role-form" } }) do |form| %>
+  <% if user.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h2 class="h6 mb-2"><%= pluralize(user.errors.count, "erro") %> impediram este usuario de ser salvo:</h2>
+      <ul class="mb-0 ps-3">
         <% user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,44 +12,85 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
-  </div>
-
-  <% if current_user&.admin? %>
-    <div>
-      <%= form.label :user_type, "Tipo de usuario", style: "display: block" %>
-      <%= form.select :user_type, User.user_types.keys.reject { |type| type == "admin" }.map { |type| [type.humanize, type] }, include_blank: "Selecione" %>
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <%= form.label :name, "Nome", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", autocomplete: "name", required: true %>
     </div>
 
-    <div>
-      <%= form.label :scope_ids, "Escopos (para colaborador)", style: "display: block" %>
-      <%= form.collection_select :scope_ids, Scope.all, :id, :title, {}, multiple: true, size: 5 %>
+    <div class="col-12 col-md-6">
+      <%= form.label :email, "Email", class: "form-label" %>
+      <%= form.email_field :email, class: "form-control", autocomplete: "email", required: true %>
     </div>
 
-    <div>
-      <%= form.label :apartment_ids, "Apartamentos (para morador)", style: "display: block" %>
-      <%= form.collection_select :apartment_ids, Apartment.all, :id, :identificator, {}, multiple: true, size: 6 %>
+    <% if current_user&.admin? %>
+      <div class="col-12 col-md-6">
+        <%= form.label :user_type, "Tipo de usuario", class: "form-label" %>
+        <%= form.select :user_type,
+                        User.user_types.keys.reject { |type| type == "admin" }.map { |type| [type.humanize, type] },
+                        { include_blank: "Selecione" },
+                        {
+                          class: "form-select",
+                          data: {
+                            action: "change->user-role-form#userTypeChanged",
+                            user_role_form_target: "userType"
+                          }
+                        } %>
+      </div>
+
+      <div class="col-12" data-user-role-form-target="scopeSection">
+        <%= form.label :scope_ids, "Escopos (para colaborador)", class: "form-label" %>
+        <%= render "association_checkboxes",
+                   form: form,
+                   field: :scope_ids,
+                   collection: @available_scopes,
+                   value_method: :id,
+                   text_method: :title,
+                   target: "scopeInputs" %>
+        <small class="form-text text-secondary">Visivel apenas quando o tipo for colaborador.</small>
+      </div>
+
+      <div class="col-12" data-user-role-form-target="apartmentSection">
+        <%= form.label :apartment_ids, "Apartamentos (para morador)", class: "form-label" %>
+        <%= render "association_checkboxes",
+                   form: form,
+                   field: :apartment_ids,
+                   collection: @available_apartments,
+                   value_method: :id,
+                   text_method: :label_with_building,
+                   target: "apartmentInputs" %>
+        <small class="form-text text-secondary">Visivel apenas quando o tipo for morador.</small>
+      </div>
+    <% end %>
+
+    <div class="col-12 col-md-6">
+      <%= form.label :password, "Senha", class: "form-label" %>
+      <%= form.password_field :password, class: "form-control", autocomplete: "new-password" %>
+      <% if user.persisted? %>
+        <small class="form-text text-secondary">Preencha apenas se quiser alterar a senha.</small>
+      <% end %>
     </div>
-  <% end %>
 
-  <div>
-    <%= form.label :password, style: "display: block" %>
-    <%= form.password_field :password %>
+    <div class="col-12 col-md-6">
+      <%= form.label :password_confirmation, "Confirmacao da senha", class: "form-label" %>
+      <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :password_confirmation, style: "display: block" %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-4 d-flex flex-wrap gap-2">
+    <%= form.submit(user.persisted? ? "Salvar alteracoes" : "Criar usuario", class: "btn btn-primary") %>
+    <% if modal && user.persisted? %>
+      <%= link_to "Excluir usuario",
+                  user_path(user),
+                  class: "btn btn-outline-danger",
+                  data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "Tem certeza que deseja excluir este usuario?",
+                    turbo_frame: "_top"
+                  } %>
+    <% end %>
+    <% unless modal %>
+      <%= link_to "Voltar", users_path, class: "btn btn-outline-secondary" %>
+    <% end %>
   </div>
 <% end %>

@@ -1,11 +1,11 @@
-<% content_for :title, "New user" %>
+<% content_for :title, "Novo usuario" %>
 
-<h1>New user</h1>
+<%= render "shared/page_header",
+           title: "Novo usuario",
+           subtitle: "Cadastre um novo usuario e, se for morador, associe apartamentos." %>
 
-<%= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Back to users", users_path %>
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <%= render "form", user: @user %>
+  </div>
 </div>
