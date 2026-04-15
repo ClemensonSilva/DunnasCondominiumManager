@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |_exception|
     if user_signed_in?
-      redirect_to authenticated_root_path, alert: "Você não tem permissão para acessar esta página."
+      redirect_to access_denied_fallback_path, alert: "Você não tem permissão para acessar esta página."
     else
       redirect_to new_user_session_path, alert: "Faça login para continuar."
     end
@@ -20,5 +20,12 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
     devise_parameter_sanitizer.permit(:account_update, keys: [ :name ])
+  end
+
+  def access_denied_fallback_path
+    return tickets_path if current_user&.colaborator?
+    return buildings_path if current_user&.resident? || current_user&.admin?
+
+    unauthenticated_root_path
   end
 end
