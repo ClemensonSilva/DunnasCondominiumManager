@@ -6,7 +6,17 @@ class TicketsController < ApplicationController
 
   # GET /tickets or /tickets.json
   def index
-    @tickets = Ticket.accessible_by(current_ability).order(created_at: :desc)
+    @ticket_status_filter_options = TicketStatus.order(:title)
+    @ticket_type_filter_options = TicketType.order(:title)
+    @apartment_filter_options = accessible_apartments_for_index
+
+    @tickets = Ticket.accessible_by(current_ability)
+      .for_index
+      .with_status(params[:ticket_status_id])
+      .with_ticket_type(params[:ticket_type_id])
+      .with_apartment(params[:apartment_id])
+      .with_collaborator_state(params[:collaborator_state])
+      .recent_first
   end
 
   # GET /tickets/1 or /tickets/1.json
@@ -72,7 +82,11 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      params.expect(ticket: [ :user_id, :apartment_id, :ticket_status_id, :ticket_type_id, :title, :description, :attachments, :finished_at ])
+      if current_user&.colaborator? && action_name == "update"
+        params.expect(ticket: [ :ticket_status_id, :finished_at ])
+      else
+        params.expect(ticket: [ :user_id, :apartment_id, :ticket_status_id, :ticket_type_id, :title, :description, :attachments, :finished_at ])
+      end
     end
     ## Vou refatorar e tirar isso daqui
     def prepare_wizard_collections
@@ -103,6 +117,14 @@ class TicketsController < ApplicationController
     def assign_ticket_defaults(ticket)
       ticket.user ||= current_user
       ticket.ticket_status ||= TicketStatus.find_by(is_default: true) || TicketStatus.first
+    end
+
+    def accessible_apartments_for_index
+      if current_user&.resident?
+        current_user.apartments.includes(:building).order(:identificator)
+      else
+        Apartment.includes(:building).order(:identificator)
+      end
     end
 
     def prepare_ticket_edit_collections

@@ -24,40 +24,58 @@
           <% end %>
 
           <div class="row g-3">
-            <div class="col-12 col-md-6">
-              <%= form.label :apartment_id, "Apartamento", class: "form-label" %>
-              <%= form.collection_select :apartment_id, @edit_apartment_options, :id, :identificator, { prompt: "Selecione" }, class: "form-select", required: true %>
-            </div>
+            <% if current_user&.colaborator? %>
+              <div class="col-12">
+                <div class="alert alert-info mb-0" role="alert">
+                  Como colaborador, voce pode atualizar apenas status e finalizacao do chamado.
+                </div>
+              </div>
 
-            <div class="col-12 col-md-6">
-              <%= form.label :ticket_type_id, "Tipo de reparo", class: "form-label" %>
-              <%= form.collection_select :ticket_type_id, @edit_ticket_type_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
-            </div>
+              <div class="col-12 col-md-6">
+                <%= form.label :ticket_status_id, "Status", class: "form-label" %>
+                <%= form.collection_select :ticket_status_id, @edit_ticket_status_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+              </div>
 
-            <div class="col-12 col-md-6">
-              <%= form.label :ticket_status_id, "Status", class: "form-label" %>
-              <%= form.collection_select :ticket_status_id, @edit_ticket_status_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
-            </div>
+              <div class="col-12 col-md-6">
+                <%= form.label :finished_at, "Data de finalizacao", class: "form-label" %>
+                <%= form.datetime_local_field :finished_at, class: "form-control" %>
+              </div>
+            <% else %>
+              <div class="col-12 col-md-6">
+                <%= form.label :apartment_id, "Apartamento", class: "form-label" %>
+                <%= form.collection_select :apartment_id, @edit_apartment_options, :id, :identificator, { prompt: "Selecione" }, class: "form-select", required: true %>
+              </div>
 
-            <div class="col-12 col-md-6">
-              <%= form.label :finished_at, "Data de finalizacao", class: "form-label" %>
-              <%= form.datetime_local_field :finished_at, class: "form-control" %>
-            </div>
+              <div class="col-12 col-md-6">
+                <%= form.label :ticket_type_id, "Tipo de reparo", class: "form-label" %>
+                <%= form.collection_select :ticket_type_id, @edit_ticket_type_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+              </div>
 
-            <div class="col-12">
-              <%= form.label :title, "Titulo", class: "form-label" %>
-              <%= form.text_field :title, class: "form-control", required: true %>
-            </div>
+              <div class="col-12 col-md-6">
+                <%= form.label :ticket_status_id, "Status", class: "form-label" %>
+                <%= form.collection_select :ticket_status_id, @edit_ticket_status_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+              </div>
 
-            <div class="col-12">
-              <%= form.label :description, "Descricao", class: "form-label" %>
-              <%= form.text_area :description, rows: 5, class: "form-control", required: true %>
-            </div>
+              <div class="col-12 col-md-6">
+                <%= form.label :finished_at, "Data de finalizacao", class: "form-label" %>
+                <%= form.datetime_local_field :finished_at, class: "form-control" %>
+              </div>
 
-            <div class="col-12">
-              <%= form.label :attachments, "Anexos", class: "form-label" %>
-              <%= form.text_field :attachments, class: "form-control" %>
-            </div>
+              <div class="col-12">
+                <%= form.label :title, "Titulo", class: "form-label" %>
+                <%= form.text_field :title, class: "form-control", required: true %>
+              </div>
+
+              <div class="col-12">
+                <%= form.label :description, "Descricao", class: "form-label" %>
+                <%= form.text_area :description, rows: 5, class: "form-control", required: true %>
+              </div>
+
+              <div class="col-12">
+                <%= form.label :attachments, "Anexos", class: "form-label" %>
+                <%= form.text_field :attachments, class: "form-control" %>
+              </div>
+            <% end %>
           </div>
 
           <div class="modal-footer px-0 pb-0 mt-3">
