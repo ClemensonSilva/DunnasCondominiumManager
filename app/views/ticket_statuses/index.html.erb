@@ -2,9 +2,13 @@
 
 <%= render "shared/page_header", 
            title: "Status de Tickets", 
-           buttons: capture { %>
-             <%= link_to "+ Novo Status", new_ticket_status_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
-           <% } %>
+           buttons: page_header_button(
+             "+ Novo Status",
+             new_ticket_status_path,
+             ability: :create,
+             subject: TicketStatus,
+             options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+           ) %>
 
 
 <div id="ticket_statuses" class="row g-4">

@@ -9,9 +9,15 @@
              title: @user.name,
              subtitle: "Detalhes do usuario cadastrado.",
              buttons: (
-               link_to("Editar", edit_user_path(@user), data: { turbo_frame: "modal_container" }, class: "btn btn-outline-primary") +
-               link_to("Voltar", users_path, class: "btn btn-outline-secondary")
-             ) %>
+                page_header_button(
+                 "Editar",
+                 edit_user_path(@user),
+                 ability: :update,
+                 subject: @user,
+                 options: { data: { turbo_frame: "modal_container" }, class: "btn btn-outline-primary" }
+               ) || ""
+             ) +
+             link_to("Voltar", users_path, class: "btn btn-outline-secondary") %>
 
   <div class="card border-0 shadow-sm">
     <div class="card-body p-4">

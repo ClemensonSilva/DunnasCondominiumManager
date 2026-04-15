@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   authenticated :user do
-    root "buildings#index", as: :authenticated_root
+    root "home#index", as: :authenticated_root
   end
 
   unauthenticated do

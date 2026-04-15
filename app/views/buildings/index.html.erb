@@ -3,9 +3,13 @@
 <%= render "shared/page_header", 
            title: "Predios", 
            subtitle: "Visao geral dos predios cadastrados.",
-           buttons: capture { %>
-             <%= link_to "+ Novo Predio", new_building_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
-           <% } %>
+           buttons: page_header_button(
+             "+ Novo Predio",
+             new_building_path,
+             ability: :create,
+             subject: Building,
+             options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+           ) %>
 
 <div class="mb-4">
   <% if current_user.admin? %>

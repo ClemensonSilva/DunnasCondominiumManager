@@ -24,11 +24,15 @@
           </dd>
         </div>
       </dl>
-
       <div class="mt-4 d-flex gap-2">
         <%= link_to "Ver detalhes", building, class: "btn btn-outline-primary btn-sm" %>
+              <% if can? :create, Building %>
+
         <%= link_to "Editar", edit_building_path(building), class: "btn btn-light btn-sm" %>
+       <% end %>
+
       </div>
+     
     </div>
   </div>
 </article>

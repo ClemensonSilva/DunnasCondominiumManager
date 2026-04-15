@@ -6,10 +6,12 @@ class CommentsController < ApplicationController
 
   # GET /comments or /comments.json
   def index
-    @comments = @ticket.comments.accessible_by(current_ability, :read)
-    if @comments.empty?
-      redirect_to @ticket, alert: "Nenhum comentário encontrado para este chamado."
-    end
+    @comments = @ticket.comments
+      .accessible_by(current_ability, :read)
+      .includes(:user)
+      .order(created_at: :asc)
+
+    @close_path = modal_close_path
   end
 
   # GET /comments/1 or /comments/1.json
@@ -103,6 +105,19 @@ class CommentsController < ApplicationController
 
       authorize! action, @comment
     end
+
+    def modal_close_path
+      return ticket_path(@ticket) if params[:return_to].blank?
+
+      candidate = params[:return_to].to_s
+      uri = URI.parse(candidate)
+      return ticket_path(@ticket) if uri.scheme.present? || uri.host.present?
+
+      candidate.start_with?("/") ? candidate : ticket_path(@ticket)
+    rescue URI::InvalidURIError
+      ticket_path(@ticket)
+    end
+
     # Only allow a list of trusted parameters through.
     def comment_params
       params.expect(comment: [ :content ])

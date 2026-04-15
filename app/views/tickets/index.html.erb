@@ -1,27 +1,27 @@
 <% content_for :title, "Tickets" %>
 
 <section class="container-fluid px-0">
-  <%= render "shared/page_header", 
-           title: "Tickets", 
-           subtitle: "Visao geral dos tickets cadastrados.",
-           buttons: capture { %>
-             <%= link_to "+ Novo Ticket", new_ticket_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" %>
-           <% } %>  
+  <%= render "shared/page_header",
+             title: "Tickets",
+             subtitle: "Visao geral dos tickets cadastrados.",
+             buttons: page_header_button(
+               "+ Novo Ticket",
+               new_ticket_path,
+               ability: :create,
+               subject: Ticket,
+               options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+             ) %>
+
+  <%= render "filters",
+             ticket_status_filter_options: @ticket_status_filter_options,
+             ticket_type_filter_options: @ticket_type_filter_options,
+             apartment_filter_options: @apartment_filter_options %>
+
   <% if @tickets.any? %>
-    <div id="tickets" class="row g-3">
-      <% @tickets.each do |ticket| %>
-        <div class="col-12 col-md-6 col-xl-4">
-          <%= render ticket %>
-        </div>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="card border-0 shadow-sm">
-      <div class="card-body text-center py-5">
-        <h2 class="h5 mb-2">Nenhum chamado encontrado</h2>
-        <p class="text-secondary mb-3">Crie o primeiro ticket para iniciar o acompanhamento.</p>
-        <%= link_to "Criar ticket", new_ticket_path, class: "btn btn-outline-primary" %>
-      </div>
-    </div>
+    <%= render "ticket_list", tickets: @tickets %>
+  <% end %>
+
+  <% unless @tickets.any? %>
+    <%= render "empty_state" %>
   <% end %>
 </section>
