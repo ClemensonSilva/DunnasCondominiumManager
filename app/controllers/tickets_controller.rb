@@ -85,7 +85,7 @@ class TicketsController < ApplicationController
       if current_user&.colaborator? && action_name == "update"
         params.expect(ticket: [ :ticket_status_id, :finished_at ])
       else
-        params.expect(ticket: [ :user_id, :apartment_id, :ticket_status_id, :ticket_type_id, :title, :description, :attachments, :finished_at ])
+        params.expect(ticket: [ :user_id, :apartment_id, :ticket_type_id, :title, :description, :attachments ])
       end
     end
     ## Vou refatorar e tirar isso daqui

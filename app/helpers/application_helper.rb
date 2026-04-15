@@ -13,4 +13,10 @@ module ApplicationHelper
       "text-bg-light border"
     end
   end
+
+  def page_header_button(label, path, ability:, subject:, options: {})
+    return unless can?(ability, subject)
+
+    link_to(label, path, **options)
+  end
 end

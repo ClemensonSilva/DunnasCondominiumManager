@@ -19,7 +19,10 @@
 
       <div>
         <%= link_to "Ver detalhes", ticket_path(ticket), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary" %>
-        <%= link_to "Ver comentários", ticket_comments_path(ticket), class: "btn btn-sm btn-outline-secondary" %>
+        <%= link_to "Ver comentarios",
+                    ticket_comments_path(ticket, return_to: request.fullpath),
+                    data: { turbo_frame: "modal_container" },
+                    class: "btn btn-sm btn-outline-secondary" %>
       </div>
     </div>
   </article>

@@ -1,16 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Timeline de comentarios" %>
 
-<% content_for :title, "Comments" %>
+<% timeline_body = capture do %>
+  <section class="comments-timeline">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h2 class="h5 mb-1">Interacoes do chamado</h2>
+        <p class="text-secondary mb-0">Acompanhamento cronologico dos comentarios.</p>
+      </div>
+      <span class="badge text-bg-light border"><%= pluralize(@comments.size, "interacao") %></span>
+    </div>
 
-<h1>Comments</h1>
+    <div class="d-flex flex-column gap-3">
+      <%= render partial: "comments/timeline_comment_card", collection: @comments, as: :comment %>
+    </div>
 
-<div id="comments">
-  <% @comments.each do |comment| %>
-    <%= render comment %>
-    <p>
-      <%= link_to "Show this comment", ticket_comment_path(@ticket, comment) %>
-    </p>
+    <% if can? :create, Comment %>
+      <div class="mt-3 d-flex justify-content-end">
+        <%= link_to "Adicionar comentario",
+                    new_ticket_comment_path(@ticket),
+                    data: { turbo_frame: "_top" },
+                    class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<% if turbo_frame_request? %>
+  <%= render layout: "shared/modal", locals: { title: "Timeline de comentarios", close_path: @close_path } do %>
+    <%= timeline_body %>
   <% end %>
-</div>
+<% else %>
+  <section class="container-fluid px-0">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <%= timeline_body %>
+      </div>
+    </div>
 
-<%= link_to "New comment", new_ticket_comment_path(@ticket) %>
+    <div class="mt-3">
+      <%= link_to "Voltar ao ticket", @ticket, class: "btn btn-outline-secondary" %>
+    </div>
+  </section>
+<% end %>

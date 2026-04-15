@@ -77,6 +77,10 @@
     <% if can? :destroy, @ticket %>
       <%= button_to "Excluir ticket", @ticket, method: :delete, class: "btn btn-outline-danger", form: { data: { turbo_confirm: "Tem certeza que deseja excluir este ticket?" } } %>
     <% end %>
+    <%= link_to "Ver timeline de comentarios",
+                ticket_comments_path(@ticket, return_to: request.fullpath),
+                data: { turbo_frame: "modal_container" },
+                class: "btn btn-outline-secondary" %>
     <% if can? :create, Comment %>
       <%= link_to "Adicionar comentário", new_ticket_comment_path(@ticket), class: "btn btn-outline-primary" %>
     <% end %>
