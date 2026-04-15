@@ -11,21 +11,11 @@
           <dt class="text-secondary fw-medium">Email</dt>
           <dd class="mb-0 fw-semibold text-break"><%= user.email %></dd>
         </div>
-
-        <div class="py-2 border-bottom">
-          <dt class="text-secondary fw-medium">Escopos</dt>
-          <dd class="mb-0"><%= user.scopes.map(&:title).join(", ").presence || "-" %></dd>
-        </div>
-
-        <div class="py-2">
-          <dt class="text-secondary fw-medium">Apartamentos</dt>
-          <dd class="mb-0"><%= user.apartments.map(&:identificator).join(", ").presence || "-" %></dd>
-        </div>
       </dl>
 
       <div class="mt-4 d-flex gap-2">
-        <%= link_to "Ver", user, class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "Editar", edit_user_path(user), class: "btn btn-light btn-sm" %>
+        <%= link_to "Ver", user, data: { turbo_frame: "modal_container" }, class: "btn btn-outline-primary btn-sm" %>
+        <%= link_to "Editar", edit_user_path(user), data: { turbo_frame: "modal_container" }, class: "btn btn-light btn-sm" %>
       </div>
     </div>
   </div>

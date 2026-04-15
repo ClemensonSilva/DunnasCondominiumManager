@@ -1,10 +1,25 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @user.name %>
 
-<%= render @user %>
+<% if turbo_frame_request? %>
+  <%= render layout: "shared/modal", locals: { title: @user.name, close_path: users_path } do %>
+    <%= render "details", user: @user %>
+  <% end %>
+<% else %>
+  <%= render "shared/page_header",
+             title: @user.name,
+             subtitle: "Detalhes do usuario cadastrado.",
+             buttons: (
+               link_to("Editar", edit_user_path(@user), data: { turbo_frame: "modal_container" }, class: "btn btn-outline-primary") +
+               link_to("Voltar", users_path, class: "btn btn-outline-secondary")
+             ) %>
 
-<div>
-  <%= link_to "Edit this user", edit_user_path(@user) %> |
-  <%= link_to "Back to users", users_path %>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+      <%= render "details", user: @user %>
 
-  <%= button_to "Destroy this user", @user, method: :delete %>
-</div>
+      <div class="mt-4 d-flex gap-2">
+        <%= button_to "Excluir usuario", @user, method: :delete, class: "btn btn-danger" %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -10,27 +10,26 @@
 
 
 <%= turbo_frame_tag "modal_container" do %>
-  <div class="modal fade" 
-       id="dynamicModal" 
-       tabindex="-1" 
-       data-controller="modal"
-       data-modal-auto-open-value="true"
-       <%= %(data-modal-close-path-value="#{close_path}") if close_path.present? %>
-       data-modal-target="modal">
-       
+  <%= tag.div class: "modal fade",
+              id: "dynamicModal",
+              tabindex: "-1",
+              data: {
+                controller: "modal",
+                modal_auto_open_value: true,
+                modal_close_path_value: close_path,
+                modal_target: "modal"
+              } do %>
     <div class="modal-dialog">
       <div class="modal-content">
-        
         <div class="modal-header">
           <h5 class="modal-title fw-bold"><%= title %></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
-        
+
         <div class="modal-body">
           <%= yield %>
         </div>
-
       </div>
     </div>
-  </div>
+  <% end %>
 <% end %>

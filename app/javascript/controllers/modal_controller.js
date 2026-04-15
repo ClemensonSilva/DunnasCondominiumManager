@@ -55,14 +55,21 @@ export default class extends Controller {
   }
 
   handleHidden() {
-    if (!this.hasClosePathValue) return
+    const closePath = this.normalizedClosePathValue()
+    if (!closePath) return
 
     if (window.Turbo?.visit) {
-      window.Turbo.visit(this.closePathValue, { action: "replace" })
+      window.Turbo.visit(closePath, { action: "replace" })
       return
     }
 
-    window.location.assign(this.closePathValue)
+    window.location.assign(closePath)
+  }
+
+  normalizedClosePathValue() {
+    if (!this.hasClosePathValue) return null
+
+    return this.closePathValue.replace(/^['"]+|['"]+$/g, "")
   }
 
   findModalElement(event) {
