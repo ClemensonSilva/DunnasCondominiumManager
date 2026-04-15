@@ -12,10 +12,6 @@ class CommentsController < ApplicationController
       .order(created_at: :asc)
 
     @close_path = modal_close_path
-
-    if @comments.empty?
-      redirect_to @ticket, alert: "Nenhum comentário encontrado para este chamado."
-    end
   end
 
   # GET /comments/1 or /comments/1.json
