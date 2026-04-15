@@ -1,16 +1,16 @@
 <% content_for :title, "Tickets" %>
 
 <section class="container-fluid px-0">
-  <% header_buttons = if can?(:create, Ticket)
-    capture do
-      link_to "+ Novo Ticket", new_ticket_path, data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm"
-    end
-  end %>
-
   <%= render "shared/page_header",
              title: "Tickets",
              subtitle: "Visao geral dos tickets cadastrados.",
-             buttons: header_buttons %>
+             buttons: page_header_button(
+               "+ Novo Ticket",
+               new_ticket_path,
+               ability: :create,
+               subject: Ticket,
+               options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+             ) %>
 
   <%= render "filters",
              ticket_status_filter_options: @ticket_status_filter_options,

@@ -3,14 +3,20 @@
 <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
   <%= render "shared/page_header", 
            title: "Gerenciamento de Usuarios", 
-           subtitle: "Visao geral dos usuarios cadastrados."
+           subtitle: "Visao geral dos usuarios cadastrados.",
+           buttons: page_header_button(
+             "Novo usuario",
+             new_user_path,
+             ability: :create,
+             subject: User,
+             options: { class: "btn btn-success" }
+           )
           %>
 
   <div class="d-flex flex-wrap gap-2">
     <%= link_to "Todos", users_path, class: "btn #{action_name == 'index' ? 'btn-primary' : 'btn-outline-primary'}" %>
     <%= link_to "Residentes", residents_users_path, class: "btn #{action_name == 'residents' ? 'btn-primary' : 'btn-outline-primary'}" %>
     <%= link_to "Colaboradores", colaborators_users_path, class: "btn #{action_name == 'colaborators' ? 'btn-primary' : 'btn-outline-primary'}" %>
-    <%= link_to "Novo usuario", new_user_path, class: "btn btn-success" %>
   </div>
 </div>
 
