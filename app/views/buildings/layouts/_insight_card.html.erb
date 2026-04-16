@@ -1,0 +1,11 @@
+<% card_classes = local_assigns.fetch(:card_classes, "card border bg-light-subtle h-100") %>
+<% body_classes = local_assigns.fetch(:body_classes, "card-body") %>
+<% title_tag = local_assigns.fetch(:title_tag, :h3) %>
+<% title_classes = local_assigns.fetch(:title_classes, "h6 mb-3") %>
+
+<div class="<%= card_classes %>">
+  <div class="<%= body_classes %>">
+    <%= content_tag title_tag, title, class: title_classes %>
+    <%= yield %>
+  </div>
+</div>

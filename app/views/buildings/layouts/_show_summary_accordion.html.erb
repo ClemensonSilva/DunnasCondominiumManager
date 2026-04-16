@@ -10,22 +10,10 @@
     <div id="collapseSummary" class="accordion-collapse collapse" aria-labelledby="headingSummary" data-bs-parent="#buildingSummaryAccordion">
       <div class="accordion-body">
         <div class="row g-3">
-          <div class="col-6 col-lg-3">
-            <p class="text-secondary mb-1 small">Apartamentos</p>
-            <p class="h5 mb-0"><%= total_apartments_display %></p>
-          </div>
-          <div class="col-6 col-lg-3">
-            <p class="text-secondary mb-1 small">Andares</p>
-            <p class="h5 mb-0"><%= @building.number_of_floors %></p>
-          </div>
-          <div class="col-6 col-lg-3">
-            <p class="text-secondary mb-1 small">Aptos por andar</p>
-            <p class="h5 mb-0"><%= @building.apartments_per_floor %></p>
-          </div>
-          <div class="col-6 col-lg-3">
-            <p class="text-secondary mb-1 small">Residentes</p>
-            <p class="h5 mb-0"><%= @residents_count %></p>
-          </div>
+          <%= render "buildings/layouts/summary_stat", label: "Apartamentos", value: total_apartments_display %>
+          <%= render "buildings/layouts/summary_stat", label: "Andares", value: @building.number_of_floors %>
+          <%= render "buildings/layouts/summary_stat", label: "Aptos por andar", value: @building.apartments_per_floor %>
+          <%= render "buildings/layouts/summary_stat", label: "Residentes", value: @residents_count %>
         </div>
       </div>
     </div>
