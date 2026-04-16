@@ -9,7 +9,7 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2">
-        <% if current_user&.colaborator? && @ticket.available_for_pickup? && can?(:take, @ticket) %>
+        <% if can_take_ticket?(@ticket) %>
           <%= button_to "Pegar ticket",
                         take_ticket_path(@ticket),
                         method: :patch,
@@ -27,55 +27,16 @@
   <div class="card border-0 shadow-sm mb-3">
     <div class="card-body">
       <div class="row g-3">
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Apartamento</span>
-          <strong><%= @ticket.apartment&.identificator || "-" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Tipo de reparo</span>
-          <strong><%= @ticket.ticket_type&.title || "-" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Status</span>
-          <strong><%= @ticket.ticket_status&.title || "-" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Solicitante</span>
-          <strong><%= @ticket.user&.name || @ticket.user&.email || "-" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Colaborador responsavel</span>
-          <strong><%= @ticket.collaborator&.name || @ticket.collaborator&.email || "Nao atribuido" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Anexos</span>
-          <strong><%= @ticket.attachments.presence || "-" %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Criado em</span>
-          <strong><%= l(@ticket.created_at, format: :short) %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Atualizado em</span>
-          <strong><%= l(@ticket.updated_at, format: :short) %></strong>
-        </div>
-
-        <div class="col-12 col-md-6">
-          <span class="text-secondary d-block">Finalizacao</span>
-          <strong><%= @ticket.finished_at ? l(@ticket.finished_at, format: :short) : "-" %></strong>
-        </div>
-
-        <div class="col-12">
-          <span class="text-secondary d-block">Descricao</span>
-          <p class="mb-0"><%= @ticket.description.presence || "Sem descricao." %></p>
-        </div>
+        <%= render "show_detail_item", label: "Apartamento", value: @ticket.apartment&.identificator || "-" %>
+        <%= render "show_detail_item", label: "Tipo de reparo", value: @ticket.ticket_type&.title || "-" %>
+        <%= render "show_detail_item", label: "Status", value: @ticket.ticket_status&.title || "-" %>
+        <%= render "show_detail_item", label: "Solicitante", value: ticket_person_display(@ticket.user) %>
+        <%= render "show_detail_item", label: "Colaborador responsavel", value: ticket_person_display(@ticket.collaborator, "Nao atribuido") %>
+        <%= render "show_detail_item", label: "Anexos", value: @ticket.attachments.presence || "-" %>
+        <%= render "show_detail_item", label: "Criado em", value: ticket_datetime_display(@ticket.created_at) %>
+        <%= render "show_detail_item", label: "Atualizado em", value: ticket_datetime_display(@ticket.updated_at) %>
+        <%= render "show_detail_item", label: "Finalizacao", value: ticket_datetime_display(@ticket.finished_at) %>
+        <%= render "show_detail_item", label: "Descricao", value: @ticket.description.presence || "Sem descricao.", col_classes: "col-12", value_tag: :p, value_classes: "mb-0" %>
       </div>
     </div>
   </div>
@@ -90,6 +51,9 @@
                 class: "btn btn-outline-secondary" %>
     <% if can? :create, Comment %>
       <%= link_to "Adicionar comentário", new_ticket_comment_path(@ticket), class: "btn btn-outline-primary" %>
+    <% end %>
+    <% if can_finalize_ticket?(@ticket) %>
+      <%= button_to "Marcar como Concluído", finalize_ticket_path(@ticket), method: :patch, class: "btn btn-outline-primary" %>
     <% end %>
   </div>
 </section>

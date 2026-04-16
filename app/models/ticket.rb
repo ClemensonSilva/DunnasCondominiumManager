@@ -22,6 +22,10 @@ class Ticket < ApplicationRecord
   }
   scope :for_index, -> { includes(:ticket_status, :ticket_type, :user, :apartment, :collaborator) }
 
+  def already_finalized?
+    return false unless finished_at.present?
+    true
+  end
   def available_for_pickup?
     finished_at.blank? && collaborator_id.blank?
   end

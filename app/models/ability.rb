@@ -18,11 +18,12 @@ class Ability
     can %i[read update], User, id: user.id
 
     if user.colaborator?
-      can %i[read update], Ticket, ticket_type: { scope_id: user.scope_ids }
+      can %i[read ], Ticket, ticket_type: { scope_id: user.scope_ids }
       can :take, Ticket,
           ticket_type: { scope_id: user.scope_ids },
           finished_at: nil,
           collaborator_id: nil
+      can :finalize, Ticket, collaborator_id: user.id, finished_at: nil
       can :read, Comment, ticket: { ticket_type: { scope_id: user.scope_ids } }
       can :create, Comment, ticket: { ticket_type: { scope_id: user.scope_ids } }
       can %i[update destroy], Comment,

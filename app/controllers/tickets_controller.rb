@@ -1,6 +1,6 @@
 class TicketsController < ApplicationController
   load_and_authorize_resource
-  before_action :set_ticket, only: %i[ show edit update destroy take ]
+  before_action :set_ticket, only: %i[ show edit update destroy take finalize ]
   before_action :prepare_wizard_collections, only: %i[ new edit create update ]
   before_action :prepare_ticket_edit_collections, only: %i[ edit update ]
 
@@ -41,7 +41,7 @@ class TicketsController < ApplicationController
 
     respond_to do |format|
       if @ticket.save
-        format.html { redirect_to @ticket, notice: "Ticket was successfully created." }
+        format.html { redirect_to @ticket, notice: "Ticket criado com sucesso." }
         format.json { render :show, status: :created, location: @ticket }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -53,7 +53,7 @@ class TicketsController < ApplicationController
   def update
     respond_to do |format|
       if @ticket.update(ticket_params)
-        format.html { redirect_to @ticket, notice: "Ticket was successfully updated.", status: :see_other }
+        format.html { redirect_to @ticket, notice: "Ticket atualizado com sucesso.", status: :see_other }
         format.json { render :show, status: :ok, location: @ticket }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,6 +62,17 @@ class TicketsController < ApplicationController
     end
   end
 
+  # PATCH /tickets/1/finalize
+  def finalize
+    authorize! :finalize, @ticket
+    time_of_finalization = Time.current
+
+    if @ticket.update(finished_at: time_of_finalization)
+      redirect_to @ticket, notice: "Ticket marcado como concluído com sucesso às #{l(time_of_finalization, format: :short)}.", status: :see_other
+    else
+      redirect_to @ticket, alert: "Este ticket nao pode ser marcado como concluído.", status: :see_other
+    end
+  end
   # PATCH /tickets/1/take
   def take
     authorize! :take, @ticket
@@ -78,7 +89,7 @@ class TicketsController < ApplicationController
     @ticket.destroy!
 
     respond_to do |format|
-      format.html { redirect_to tickets_path, notice: "Ticket was successfully destroyed.", status: :see_other }
+      format.html { redirect_to tickets_path, notice: "Ticket excluido com sucesso.", status: :see_other }
       format.json { head :no_content }
     end
   end
