@@ -65,10 +65,9 @@ class TicketsController < ApplicationController
   # PATCH /tickets/1/finalize
   def finalize
     authorize! :finalize, @ticket
-    time_of_finalization = Time.current
 
-    if @ticket.update(finished_at: time_of_finalization)
-      redirect_to @ticket, notice: "Ticket marcado como concluído com sucesso às #{l(time_of_finalization, format: :short)}.", status: :see_other
+    if @ticket.close!(current_user)
+      redirect_to @ticket, notice: "Ticket marcado como concluído com sucesso às #{l(@ticket.finished_at, format: :short)}.", status: :see_other
     else
       redirect_to @ticket, alert: "Este ticket nao pode ser marcado como concluído.", status: :see_other
     end

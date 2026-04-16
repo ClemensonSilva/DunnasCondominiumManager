@@ -34,10 +34,12 @@
                         {},
                         class: "form-select" %>
       </div>
-      <div class="col-12 col-md-6 col-lg-3">
-        <%= form.label :my_tickets, "Meus tickets", class: "form-label" %>
-        <%= form.check_box :my_tickets, { checked: params[:my_tickets] == "true" }, "true", "false" %>
-      </div>
+      <% if current_user&.colaborator? %>
+        <div class="col-12 col-md-6 col-lg-3">
+          <%= form.label :my_tickets, "Meus tickets", class: "form-label" %>
+          <%= form.check_box :my_tickets, { checked: params[:my_tickets] == "true" }, "true", "false" %>
+        </div>
+      <% end %>
 
       <div class="col-12 d-flex gap-2">
         <%= form.submit "Filtrar", class: "btn btn-outline-primary" %>
