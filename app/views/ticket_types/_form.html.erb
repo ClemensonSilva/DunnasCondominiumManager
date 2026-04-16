@@ -1,0 +1,32 @@
+<%= form_with(model: ticket_type, data: { turbo_frame: "_top" }) do |form| %>
+  <% if ticket_type.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h2 class="h6 mb-2"><%= pluralize(ticket_type.errors.count, "erro") %> impediram este tipo de chamado de ser salvo:</h2>
+      <ul class="mb-0 ps-3">
+        <% ticket_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, "Titulo", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :scope_id, "Escopo", class: "form-label" %>
+    <%= form.collection_select :scope_id, @scope_options, :id, :title, { prompt: "Selecione" }, class: "form-select", required: true %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :sla_hours, "SLA (horas)", class: "form-label" %>
+    <%= form.number_field :sla_hours, class: "form-control", min: 0, required: true %>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <%= form.submit(ticket_type.persisted? ? "Salvar alteracoes" : "Criar tipo", class: "btn btn-primary") %>
+  </div>
+<% end %>

@@ -6,6 +6,6 @@
 
   <div class="d-flex flex-wrap gap-2">
     <%= link_to "Voltar", buildings_path, class: "btn btn-outline-secondary" %>
-    <%= link_to "Editar predio", edit_building_path(@building), class: "btn btn-primary" %>
+    <%= link_to "Editar predio", edit_building_path(@building), class: "btn btn-primary", data: { turbo_frame: "modal_container" } %>
   </div>
 </div>

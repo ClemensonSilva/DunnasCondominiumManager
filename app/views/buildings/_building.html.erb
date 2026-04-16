@@ -28,7 +28,7 @@
         <%= link_to "Ver detalhes", building, class: "btn btn-outline-primary btn-sm" %>
               <% if can? :create, Building %>
 
-        <%= link_to "Editar", edit_building_path(building), class: "btn btn-light btn-sm" %>
+        <%= link_to "Editar", edit_building_path(building), class: "btn btn-light btn-sm", data: { turbo_frame: "modal_container" } %>
        <% end %>
 
       </div>

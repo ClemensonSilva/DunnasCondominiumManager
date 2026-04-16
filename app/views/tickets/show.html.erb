@@ -10,7 +10,7 @@
 
       <div class="d-flex flex-wrap gap-2">
         <% if can? :update, @ticket %>
-          <%= render "edit_modal", ticket: @ticket, auto_open: !!@open_edit_modal %>
+          <%= link_to "Editar ticket", edit_ticket_path(@ticket), class: "btn btn-outline-primary", data: { turbo_frame: "modal_container" } %>
         <% end %>
         <%= link_to "Voltar", tickets_path, class: "btn btn-outline-secondary" %>
       </div>

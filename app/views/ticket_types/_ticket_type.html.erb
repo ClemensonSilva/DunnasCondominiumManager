@@ -1,0 +1,25 @@
+<div id="<%= dom_id ticket_type %>" class="card h-100 shadow-sm border-0">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+      <h3 class="h6 mb-0"><%= ticket_type.title %></h3>
+      <span class="badge text-bg-light border"><%= ticket_type.sla_hours %>h</span>
+    </div>
+
+    <p class="mb-0 text-secondary">
+      <span class="fw-medium">Escopo:</span>
+      <span><%= ticket_type.scope&.title || "-" %></span>
+    </p>
+  </div>
+
+  <div class="card-footer bg-transparent border-top-0 pt-0 d-flex gap-2">
+    <%= link_to "Editar",
+                edit_ticket_type_path(ticket_type),
+                data: { turbo_frame: "modal_container" },
+                class: "btn btn-outline-secondary btn-sm w-100" %>
+    <%= button_to "Excluir",
+                  ticket_type,
+                  method: :delete,
+                  class: "btn btn-outline-danger btn-sm w-100",
+                  form: { data: { turbo_confirm: "Tem certeza que deseja remover este tipo?" } } %>
+  </div>
+</div>

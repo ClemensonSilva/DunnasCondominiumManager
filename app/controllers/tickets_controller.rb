@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
   load_and_authorize_resource
   before_action :set_ticket, only: %i[ show edit update destroy ]
   before_action :prepare_wizard_collections, only: %i[ new edit create update ]
-  before_action :prepare_ticket_edit_collections, only: %i[ show update ]
+  before_action :prepare_ticket_edit_collections, only: %i[ edit update ]
 
   # GET /tickets or /tickets.json
   def index
@@ -49,7 +49,6 @@ class TicketsController < ApplicationController
       end
     end
   end
-
   # PATCH/PUT /tickets/1 or /tickets/1.json
   def update
     respond_to do |format|
@@ -57,8 +56,7 @@ class TicketsController < ApplicationController
         format.html { redirect_to @ticket, notice: "Ticket was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @ticket }
       else
-        @open_edit_modal = true
-        format.html { render :show, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ticket.errors, status: :unprocessable_entity }
       end
     end
@@ -82,10 +80,11 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      if current_user&.colaborator? && action_name == "update"
-        params.expect(ticket: [ :ticket_status_id, :finished_at ])
-      else
+      if current_user&.resident? && action_name == "update"
         params.expect(ticket: [ :user_id, :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+      else
+        # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
+        params.expect(ticket: [ :ticket_status_id, :finished_at ])
       end
     end
     ## Vou refatorar e tirar isso daqui
