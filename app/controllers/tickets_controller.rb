@@ -49,7 +49,8 @@ class TicketsController < ApplicationController
       end
     end
   end
-
+   Mudar wizzard do admin para primeiro escolher o predio e depois o apartamento, nao precisa criar uma nova tela para isso, apenas atualizar a lista de apartamentos a partir do predio escolhido
+  Salva antes as alteracoes do ticket_type e depois criar uma branch corrigindo os bugs/erros de logica do projeto
   # PATCH/PUT /tickets/1 or /tickets/1.json
   def update
     respond_to do |format|
@@ -82,10 +83,11 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      if current_user&.colaborator? && action_name == "update"
-        params.expect(ticket: [ :ticket_status_id, :finished_at ])
-      else
+      if current_user&.resident? && action_name == "update"
         params.expect(ticket: [ :user_id, :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+      else
+        # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
+        params.expect(ticket: [ :ticket_status_id, :finished_at ])
       end
     end
     ## Vou refatorar e tirar isso daqui

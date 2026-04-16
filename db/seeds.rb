@@ -1,8 +1,8 @@
-# Seed do Dunnas Condominium Manager
-# Execute com: bin/rails db:seed
+ # Seed do Dunnas Condominium Manager
+ # Execute com: bin/rails db:seed
 
-# Limpar dados existentes (opcional, descomentar se necessário)
-# [TicketStatus, TicketType, Scope, Ticket, Comment, User, Apartment, Building].each(&:delete_all)
+ # Limpar dados existentes (opcional, descomentar se necessário)
+ [ TicketStatus, TicketType, Scope, Ticket, Comment, User, Apartment, Building ].each(&:delete_all)
 
 puts "=== Criando Ticket Statuses ==="
 statuses = [
