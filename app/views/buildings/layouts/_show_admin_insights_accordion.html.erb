@@ -9,62 +9,50 @@
       <div class="accordion-body">
         <div class="row g-3">
           <div class="col-12 col-lg-3">
-            <div class="card border bg-light-subtle h-100">
-              <div class="card-body">
-                <h3 class="h6 mb-3">Taxa de ocupacao</h3>
-                <p class="h4 mb-1"><%= @occupancy_rate %>%</p>
-                <p class="text-secondary mb-0"><%= @occupied_apartments_count %> de <%= @total_apartments %> apartamentos</p>
-              </div>
-            </div>
+            <%= render "buildings/layouts/insight_card", title: "Taxa de ocupacao" do %>
+              <p class="h4 mb-1"><%= @occupancy_rate %>%</p>
+              <p class="text-secondary mb-0"><%= @occupied_apartments_count %> de <%= @total_apartments %> apartamentos</p>
+            <% end %>
           </div>
 
           <div class="col-12 col-lg-3">
-            <div class="card border bg-light-subtle h-100">
-              <div class="card-body">
-                <h3 class="h6 mb-3">Tempo medio de resolucao</h3>
-                <p class="h4 mb-0"><%= @average_resolution_hours ? "#{@average_resolution_hours}h" : "Sem dados" %></p>
-              </div>
-            </div>
+            <%= render "buildings/layouts/insight_card", title: "Tempo medio de resolucao" do %>
+              <p class="h4 mb-0"><%= @average_resolution_hours ? "#{@average_resolution_hours}h" : "Sem dados" %></p>
+            <% end %>
           </div>
 
           <div class="col-12 col-lg-3">
-            <div class="card border bg-light-subtle h-100">
-              <div class="card-body">
-                <h3 class="h6 mb-3">Tipos de reparo frequentes</h3>
-                <% if @top_ticket_types.any? %>
-                  <ul class="list-unstyled mb-0">
-                    <% @top_ticket_types.each do |type_title, total| %>
-                      <li class="d-flex justify-content-between py-1 border-bottom">
-                        <span><%= type_title %></span>
-                        <strong><%= total %></strong>
-                      </li>
-                    <% end %>
-                  </ul>
-                <% else %>
-                  <p class="text-secondary mb-0">Sem dados no momento.</p>
-                <% end %>
-              </div>
-            </div>
+            <%= render "buildings/layouts/insight_card", title: "Tipos de reparo frequentes" do %>
+              <% if @top_ticket_types.any? %>
+                <ul class="list-unstyled mb-0">
+                  <% @top_ticket_types.each do |type_title, total| %>
+                    <li class="d-flex justify-content-between py-1 border-bottom">
+                      <span><%= type_title %></span>
+                      <strong><%= total %></strong>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-secondary mb-0">Sem dados no momento.</p>
+              <% end %>
+            <% end %>
           </div>
 
           <div class="col-12 col-lg-3">
-            <div class="card border bg-light-subtle h-100">
-              <div class="card-body">
-                <h3 class="h6 mb-3">Colaboradores ativos</h3>
-                <% if @collaborator_activity.any? %>
-                  <ul class="list-unstyled mb-0">
-                    <% @collaborator_activity.each do |collaborator_name, total| %>
-                      <li class="d-flex justify-content-between py-1 border-bottom">
-                        <span><%= collaborator_name.presence || "Sem nome" %></span>
-                        <strong><%= total %></strong>
-                      </li>
-                    <% end %>
-                  </ul>
-                <% else %>
-                  <p class="text-secondary mb-0">Nenhum atendimento vinculado ainda.</p>
-                <% end %>
-              </div>
-            </div>
+            <%= render "buildings/layouts/insight_card", title: "Colaboradores ativos" do %>
+              <% if @collaborator_activity.any? %>
+                <ul class="list-unstyled mb-0">
+                  <% @collaborator_activity.each do |collaborator_name, total| %>
+                    <li class="d-flex justify-content-between py-1 border-bottom">
+                      <span><%= collaborator_name.presence || "Sem nome" %></span>
+                      <strong><%= total %></strong>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-secondary mb-0">Nenhum atendimento vinculado ainda.</p>
+              <% end %>
+            <% end %>
           </div>
         </div>
 

@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     respond_to do |format|
-      if @user.update(user_params)
+      if update_user
         format.html { redirect_to @user, notice: "Usuario foi atualizado com sucesso.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -93,5 +93,17 @@ class UsersController < ApplicationController
       @available_apartments = Apartment.joins(:building)
                                        .includes(:building)
                                        .order("buildings.name ASC, apartments.identificator ASC")
+    end
+
+    def update_user
+      if password_blank_for_update?
+        @user.update_without_password(user_params.except(:password, :password_confirmation))
+      else
+        @user.update(user_params)
+      end
+    end
+
+    def password_blank_for_update?
+      user_params[:password].blank? && user_params[:password_confirmation].blank?
     end
 end

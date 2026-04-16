@@ -1,6 +1,6 @@
 class TicketsController < ApplicationController
   load_and_authorize_resource
-  before_action :set_ticket, only: %i[ show edit update destroy ]
+  before_action :set_ticket, only: %i[ show edit update destroy take finalize ]
   before_action :prepare_wizard_collections, only: %i[ new edit create update ]
   before_action :prepare_ticket_edit_collections, only: %i[ edit update ]
 
@@ -41,7 +41,7 @@ class TicketsController < ApplicationController
 
     respond_to do |format|
       if @ticket.save
-        format.html { redirect_to @ticket, notice: "Ticket was successfully created." }
+        format.html { redirect_to @ticket, notice: "Ticket criado com sucesso." }
         format.json { render :show, status: :created, location: @ticket }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -53,7 +53,7 @@ class TicketsController < ApplicationController
   def update
     respond_to do |format|
       if @ticket.update(ticket_params)
-        format.html { redirect_to @ticket, notice: "Ticket was successfully updated.", status: :see_other }
+        format.html { redirect_to @ticket, notice: "Ticket atualizado com sucesso.", status: :see_other }
         format.json { render :show, status: :ok, location: @ticket }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,12 +62,33 @@ class TicketsController < ApplicationController
     end
   end
 
+  # PATCH /tickets/1/finalize
+  def finalize
+    authorize! :finalize, @ticket
+
+    if @ticket.close!(current_user)
+      redirect_to @ticket, notice: "Ticket marcado como concluído com sucesso às #{l(@ticket.finished_at, format: :short)}.", status: :see_other
+    else
+      redirect_to @ticket, alert: "Este ticket nao pode ser marcado como concluído.", status: :see_other
+    end
+  end
+  # PATCH /tickets/1/take
+  def take
+    authorize! :take, @ticket
+
+    if @ticket.take_by!(current_user)
+      redirect_to @ticket, notice: "Ticket atribuido a voce com sucesso.", status: :see_other
+    else
+      redirect_to @ticket, alert: "Este ticket nao pode mais ser pego.", status: :see_other
+    end
+  end
+
   # DELETE /tickets/1 or /tickets/1.json
   def destroy
     @ticket.destroy!
 
     respond_to do |format|
-      format.html { redirect_to tickets_path, notice: "Ticket was successfully destroyed.", status: :see_other }
+      format.html { redirect_to tickets_path, notice: "Ticket excluido com sucesso.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -80,8 +101,8 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      if current_user&.resident? && action_name == "update"
-        params.expect(ticket: [ :user_id, :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+      if current_user&.resident? || (current_user&.admin? && action_name == "create")
+        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, :attachments ])
       else
         # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
         params.expect(ticket: [ :ticket_status_id, :finished_at ])

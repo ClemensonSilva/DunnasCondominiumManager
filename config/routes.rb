@@ -2,6 +2,12 @@ Rails.application.routes.draw do
   resources :ticket_types
   devise_for :users
   resources :tickets do
+    member do
+      patch :take
+    end
+    member do
+      patch :finalize
+    end
     resources :comments
   end
   resources :scopes
