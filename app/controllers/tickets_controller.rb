@@ -1,6 +1,6 @@
 class TicketsController < ApplicationController
   load_and_authorize_resource
-  before_action :set_ticket, only: %i[ show edit update destroy ]
+  before_action :set_ticket, only: %i[ show edit update destroy take ]
   before_action :prepare_wizard_collections, only: %i[ new edit create update ]
   before_action :prepare_ticket_edit_collections, only: %i[ edit update ]
 
@@ -59,6 +59,17 @@ class TicketsController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ticket.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # PATCH /tickets/1/take
+  def take
+    authorize! :take, @ticket
+
+    if @ticket.take_by!(current_user)
+      redirect_to @ticket, notice: "Ticket atribuido a voce com sucesso.", status: :see_other
+    else
+      redirect_to @ticket, alert: "Este ticket nao pode mais ser pego.", status: :see_other
     end
   end
 

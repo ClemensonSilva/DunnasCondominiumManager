@@ -21,4 +21,20 @@ class Ticket < ApplicationRecord
     end
   }
   scope :for_index, -> { includes(:ticket_status, :ticket_type, :user, :apartment, :collaborator) }
+
+  def available_for_pickup?
+    finished_at.blank? && collaborator_id.blank?
+  end
+
+  def take_by!(user)
+    return false unless user&.colaborator?
+
+    with_lock do
+      reload
+      return false unless available_for_pickup?
+
+      update!(collaborator: user)
+      true
+    end
+  end
 end

@@ -23,6 +23,13 @@
                     ticket_comments_path(ticket, return_to: request.fullpath),
                     data: { turbo_frame: "modal_container" },
                     class: "btn btn-sm btn-outline-secondary" %>
+        <% if current_user&.colaborator? && ticket.available_for_pickup? && can?(:take, ticket) %>
+          <%= button_to "Pegar ticket",
+                        take_ticket_path(ticket),
+                        method: :patch,
+                        class: "btn btn-sm btn-outline-success",
+                        form_class: "d-inline" %>
+        <% end %>
       </div>
     </div>
   </article>
