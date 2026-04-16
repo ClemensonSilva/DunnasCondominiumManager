@@ -80,8 +80,8 @@ class TicketsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def ticket_params
-      if current_user&.resident? && action_name == "update"
-        params.expect(ticket: [ :user_id, :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+      if current_user&.resident? || (current_user&.admin? && action_name == "create")
+        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, :attachments ])
       else
         # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
         params.expect(ticket: [ :ticket_status_id, :finished_at ])

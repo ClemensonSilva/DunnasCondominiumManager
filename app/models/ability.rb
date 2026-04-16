@@ -29,7 +29,8 @@ class Ability
 
     if user.resident?
       can :read, [ Building ]
-      can :manage, Ticket, apartment_id: user.apartment_ids
+      can :create, Ticket
+      can %i[read update destroy], Ticket, apartment_id: user.apartment_ids
       can :read, Comment, ticket: { apartment_id: user.apartment_ids }
       can :create, Comment, ticket: { apartment_id: user.apartment_ids }
       can %i[update destroy], Comment,
