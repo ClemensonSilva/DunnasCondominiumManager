@@ -2,7 +2,7 @@ class TicketsController < ApplicationController
   load_and_authorize_resource
   before_action :set_ticket, only: %i[ show edit update destroy ]
   before_action :prepare_wizard_collections, only: %i[ new edit create update ]
-  before_action :prepare_ticket_edit_collections, only: %i[ show update ]
+  before_action :prepare_ticket_edit_collections, only: %i[ edit update ]
 
   # GET /tickets or /tickets.json
   def index
@@ -49,8 +49,6 @@ class TicketsController < ApplicationController
       end
     end
   end
-   Mudar wizzard do admin para primeiro escolher o predio e depois o apartamento, nao precisa criar uma nova tela para isso, apenas atualizar a lista de apartamentos a partir do predio escolhido
-  Salva antes as alteracoes do ticket_type e depois criar uma branch corrigindo os bugs/erros de logica do projeto
   # PATCH/PUT /tickets/1 or /tickets/1.json
   def update
     respond_to do |format|
@@ -58,8 +56,7 @@ class TicketsController < ApplicationController
         format.html { redirect_to @ticket, notice: "Ticket was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @ticket }
       else
-        @open_edit_modal = true
-        format.html { render :show, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @ticket.errors, status: :unprocessable_entity }
       end
     end
