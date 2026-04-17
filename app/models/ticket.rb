@@ -60,6 +60,8 @@ class Ticket < ApplicationRecord
   end
 
   # Explicit business command to close a ticket in one place.
+  # Cria uma transação para garantir que a leitura do estado atual e a atualização sejam atômicas,
+  #  evitando condições de corrida
   def close!(user)
     with_lock do
       reload
@@ -104,7 +106,7 @@ class Ticket < ApplicationRecord
   def colaborator_must_be_inside_scope_of_ticket
     return if collaborator_id.blank? || ticket_type_id.blank?
 
-    unless collaborator&.scopes&.include?(ticket_type.scope)
+    unless collaborator.scopes.exists?(id: ticket_type.scope_id)
       errors.add(:collaborator, "deve ter escopo compatível com o tipo do ticket")
     end
   end
