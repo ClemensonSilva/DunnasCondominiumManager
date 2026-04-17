@@ -106,7 +106,7 @@ class TicketsController < ApplicationController
         params.expect(ticket: [ :ticket_status_id, :finished_at ])
       end
     end
-    ## Vou refatorar e tirar isso daqui
+    ## Ele consome os servicos do Tickets::FormOptions para preparar as coleções de opções para os selects dos forms, mantendo a lógica de quais opções mostrar dentro do form options e deixando o controller mais limpo.
     def prepare_wizard_collections
       wizard_options = Tickets::FormOptions.new(user: current_user).wizard
 

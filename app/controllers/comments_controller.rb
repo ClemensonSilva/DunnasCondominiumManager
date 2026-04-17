@@ -2,14 +2,14 @@ class CommentsController < ApplicationController
   before_action :set_ticket
   before_action :set_comment, only: %i[ show edit update destroy ]
   before_action :authorize_ticket_access!
-  before_action :authorize_comment_access!, only: %i[ show edit update destroy ]
+  before_action :authorize_comment_read!, only: %i[ show ]
+  before_action :authorize_comment_update!, only: %i[ edit update ]
+  before_action :authorize_comment_destroy!, only: %i[ destroy ]
+  before_action :ensure_ticket_open!, only: %i[ new create ]
 
   # GET /comments or /comments.json
   def index
-    @comments = @ticket.comments
-      .accessible_by(current_ability, :read)
-      .includes(:user, files_attachments: :blob)
-      .order(created_at: :asc)
+    @comments = Comments::IndexQuery.new(ticket: @ticket, ability: current_ability).call
 
     @close_path = modal_close_path
   end
@@ -20,15 +20,6 @@ class CommentsController < ApplicationController
 
   # GET /comments/new
   def new
-    if @ticket.nil?
-      redirect_to tickets_path, alert: "Chamado não encontrado para criar um comentário."
-      return
-    end
-    if @ticket.finished_at.present?
-      redirect_to @ticket, alert: "Não é possível adicionar comentários a um chamado finalizado."
-      return
-    end
-
     @comment = Comment.new(user: current_user, ticket: @ticket)
     authorize! :create, @comment
   end
@@ -58,7 +49,7 @@ class CommentsController < ApplicationController
   def update
     respond_to do |format|
       if @comment.update(comment_params)
-        format.html { redirect_to ticket_comment_path(@ticket, @comment), notice: "Comment was successfully updated.", status: :see_other }
+        format.html { redirect_to ticket_comment_path(@ticket, @comment), notice: "Comentário atualizado com sucesso.", status: :see_other }
         format.json { render :show, status: :ok, location: @comment }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -72,7 +63,7 @@ class CommentsController < ApplicationController
     @comment.destroy!
 
     respond_to do |format|
-      format.html { redirect_to ticket_comments_path(@ticket), notice: "Comment was successfully destroyed.", status: :see_other }
+      format.html { redirect_to ticket_comments_path(@ticket), notice: "Comentário excluído com sucesso.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -91,19 +82,22 @@ class CommentsController < ApplicationController
       authorize! :read, @ticket
     end
 
-    def authorize_comment_access!
-      action = case action_name.to_sym
-      when :show
-        :read
-      when :edit, :update
-        :update
-      when :destroy
-        :destroy
-      else
-        :read
-      end
+    def authorize_comment_read!
+      authorize! :read, @comment
+    end
 
-      authorize! action, @comment
+    def authorize_comment_update!
+      authorize! :update, @comment
+    end
+
+    def authorize_comment_destroy!
+      authorize! :destroy, @comment
+    end
+
+    def ensure_ticket_open!
+      return unless @ticket.finished_at.present?
+
+      redirect_to @ticket, alert: "Não é possível adicionar comentários a um chamado finalizado."
     end
 
     def modal_close_path
