@@ -1,9 +1,12 @@
 # db/seeds/04_tickets.rb
 
 residentes = User.where(user_type: :resident).includes(:apartments).to_a
-colaboradores = User.where(user_type: :colaborator).to_a
+colaboradores = User.where(user_type: :colaborator).includes(:scopes).to_a
 ticket_types = TicketType.all.to_a
 statuses = TicketStatus.all.to_a
+
+status_com_colaborador = [ "Em Andamento", "Resolvido", "Fechado" ]
+status_finalizados = [ "Resolvido", "Fechado" ]
 
 problemas_comuns = [
   "A torneira está pingando sem parar.",
@@ -16,18 +19,29 @@ problemas_comuns = [
   "A energia oscilou e o disjuntor desarmou."
 ]
 
-# Gerar 50 tickets aleatórios para testar paginação e relatórios
-50.times do |i|
+# Gerar 25 tickets aleatórios para testar paginação e relatórios
+25.times do |i|
   residente = residentes.sample
   tipo = ticket_types.sample
   status = statuses.sample
+  colaboradores_compativeis = colaboradores.select { |colaborador| colaborador.scope_ids.include?(tipo.scope_id) }
 
-  # Alguns tickets terão colaborador atribuído, outros não (dependendo do status)
-  colaborador_atribuido = [ "Em Andamento", "Resolvido", "Fechado" ].include?(status.title) ? colaboradores.sample : nil
+  # Só atribui colaborador quando houver escopo compatível com o tipo do ticket.
+  colaborador_atribuido = nil
+  if status_com_colaborador.include?(status.title)
+    if colaboradores_compativeis.any?
+      colaborador_atribuido = colaboradores_compativeis.sample
+    else
+      status_sem_colaborador = statuses.reject { |item| status_com_colaborador.include?(item.title) }
+      status = status_sem_colaborador.sample if status_sem_colaborador.any?
+    end
+  elsif colaboradores_compativeis.any? && rand < 0.35
+    colaborador_atribuido = colaboradores_compativeis.sample
+  end
 
   # Datas retroativas para simular histórico (entre hoje e 60 dias atrás)
   data_criacao = rand(1..60).days.ago
-  data_finalizacao = [ "Resolvido", "Fechado" ].include?(status.title) ? data_criacao + rand(1..5).days : nil
+  data_finalizacao = status_finalizados.include?(status.title) ? data_criacao + rand(1..5).days : nil
 
   ticket = Ticket.create!(
     title: "[#{(i+1).to_s.rjust(3, '0')}] #{tipo.title}",

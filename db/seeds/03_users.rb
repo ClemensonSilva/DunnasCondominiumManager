@@ -11,7 +11,7 @@ User.create!(
 
 # 2. COLABORADORES
 scopes = Scope.all.to_a
-5.times do |i|
+3.times do |i|
   user = User.create!(
     name: "Colaborador Téc #{i+1}",
     email: "tec#{i+1}@dunnas.com.br",
@@ -28,8 +28,8 @@ sobrenomes = %w[Silva Santos Oliveira Souza Rodrigues Ferreira Alves Pereira Lim
 
 apartments = Apartment.all.to_a
 
-# Criando 40 residentes aleatórios
-40.times do |i|
+# Criando 20 residentes aleatórios
+20.times do |i|
   nome_completo = "#{primeiros_nomes.sample} #{sobrenomes.sample} #{sobrenomes.sample}"
 
   user = User.create!(
