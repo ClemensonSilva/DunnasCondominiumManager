@@ -1,14 +1,20 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["userType", "scopeSection", "apartmentSection", "scopeInputs", "apartmentInputs"]
+  static targets = ["userType", "scopeSection", "apartmentSection", "scopeInputs", "apartmentInputs", "buildingSelect", "apartmentGroup"]
 
   connect() {
     this.toggleSections()
+    this.toggleApartmentGroups()
   }
 
   userTypeChanged() {
     this.toggleSections()
+    this.toggleApartmentGroups()
+  }
+
+  buildingChanged() {
+    this.toggleApartmentGroups()
   }
 
   toggleSections() {
@@ -37,6 +43,26 @@ export default class extends Controller {
         input.checked = false
       })
     }
+  }
+
+  toggleApartmentGroups() {
+    if (!this.hasApartmentSectionTarget) return
+
+    const isResident = this.hasUserTypeTarget && this.userTypeTarget.value === "resident"
+    const selectedBuildingId = this.hasBuildingSelectTarget ? this.buildingSelectTarget.value : ""
+
+    if (!isResident) {
+      this.apartmentGroupTargets.forEach((group) => group.classList.add("d-none"))
+      return
+    }
+
+    const shouldShowGroups = selectedBuildingId !== ""
+
+    this.apartmentGroupTargets.forEach((group) => {
+      const groupBuildingId = group.dataset.buildingIdValue
+      const shouldShow = shouldShowGroups && groupBuildingId === selectedBuildingId
+      group.classList.toggle("d-none", !shouldShow)
+    })
   }
 
   checkboxInputs(container) {
