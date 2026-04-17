@@ -6,22 +6,20 @@ class TicketsController < ApplicationController
 
   # GET /tickets or /tickets.json
   def index
-    @ticket_status_filter_options = TicketStatus.order(:title)
-    @ticket_type_filter_options = TicketType.order(:title)
-    @apartment_filter_options = accessible_apartments_for_index
+    filters = Tickets::FormOptions.new(user: current_user).index_filters
+    @ticket_status_filter_options = filters[:ticket_status_filter_options]
+    @ticket_type_filter_options = filters[:ticket_type_filter_options]
+    @apartment_filter_options = filters[:apartment_filter_options]
 
-    @tickets = Ticket.accessible_by(current_ability)
-      .for_index
-      .with_status(params[:ticket_status_id])
-      .with_ticket_type(params[:ticket_type_id])
-      .with_apartment(params[:apartment_id])
-      .with_collaborator_state(params[:collaborator_state])
-      .recent_first
+    @tickets = Tickets::IndexQuery.new(
+      ability: current_ability,
+      params: params
+    ).call
   end
 
   # GET /tickets/1 or /tickets/1.json
   def show
-    @comments = @ticket.comments
+    @comments = @ticket.comments.includes(:user, files_attachments: :blob)
   end
 
   # GET /tickets/new
@@ -102,36 +100,19 @@ class TicketsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ticket_params
       if current_user&.resident? || (current_user&.admin? && action_name == "create")
-        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, files: [] ])
       else
         # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
         params.expect(ticket: [ :ticket_status_id, :finished_at ])
       end
     end
-    ## Vou refatorar e tirar isso daqui
+    ## Ele consome os servicos do Tickets::FormOptions para preparar as coleções de opções para os selects dos forms, mantendo a lógica de quais opções mostrar dentro do form options e deixando o controller mais limpo.
     def prepare_wizard_collections
-      apartments_scope = if current_user&.resident?
-        current_user.apartments.includes(:building)
-      else
-        Apartment.includes(:building)
-      end
+      wizard_options = Tickets::FormOptions.new(user: current_user).wizard
 
-      ticket_types_scope = TicketType.includes(:scope).order(:title)
-
-      @apartment_options = apartments_scope.order(:identificator).map do |apartment|
-        building_name = apartment.building&.name.to_s
-        apartment_label = apartment.identificator.to_s
-        [ "#{building_name} - #{apartment_label}", apartment.id ]
-      end
-
-      @ticket_type_options = ticket_types_scope.map do |ticket_type|
-        scope_title = ticket_type.scope&.title.to_s
-        [ "#{scope_title} - #{ticket_type.title}", ticket_type.id ]
-      end
-
-      @ticket_type_sla_map = ticket_types_scope.each_with_object({}) do |ticket_type, map|
-        map[ticket_type.id.to_s] = ticket_type.sla_hours
-      end
+      @apartment_options = wizard_options[:apartment_options]
+      @ticket_type_options = wizard_options[:ticket_type_options]
+      @ticket_type_sla_map = wizard_options[:ticket_type_sla_map]
     end
 
     def assign_ticket_defaults(ticket)
@@ -139,22 +120,11 @@ class TicketsController < ApplicationController
       ticket.ticket_status ||= TicketStatus.find_by(is_default: true) || TicketStatus.first
     end
 
-    def accessible_apartments_for_index
-      if current_user&.resident?
-        current_user.apartments.includes(:building).order(:identificator)
-      else
-        Apartment.includes(:building).order(:identificator)
-      end
-    end
-
     def prepare_ticket_edit_collections
-      @edit_apartment_options = if current_user&.resident?
-        current_user.apartments.order(:identificator)
-      else
-        Apartment.order(:identificator)
-      end
+      edit_options = Tickets::FormOptions.new(user: current_user).edit
 
-      @edit_ticket_type_options = TicketType.order(:title)
-      @edit_ticket_status_options = TicketStatus.order(:title)
+      @edit_apartment_options = edit_options[:edit_apartment_options]
+      @edit_ticket_type_options = edit_options[:edit_ticket_type_options]
+      @edit_ticket_status_options = edit_options[:edit_ticket_status_options]
     end
 end

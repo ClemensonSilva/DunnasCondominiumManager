@@ -90,9 +90,12 @@ class UsersController < ApplicationController
 
     def prepare_form_collections
       @available_scopes = Scope.order(:title)
-      @available_apartments = Apartment.joins(:building)
-                                       .includes(:building)
-                                       .order("buildings.name ASC, apartments.identificator ASC")
+      @available_buildings = Building.order(:name)
+      @available_apartments_by_building = Apartment.joins(:building)
+                                                  .includes(:building)
+                                                  .order("buildings.name ASC, apartments.identificator ASC")
+                                                  .group_by(&:building_id)
+      @selected_building_id = params[:building_id_filter].presence || @user.apartments.first&.building_id
     end
 
     def update_user

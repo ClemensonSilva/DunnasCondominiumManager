@@ -51,15 +51,37 @@
       </div>
 
       <div class="col-12" data-user-role-form-target="apartmentSection">
-        <%= form.label :apartment_ids, "Apartamentos (para morador)", class: "form-label" %>
-        <%= render "association_checkboxes",
-                   form: form,
-                   field: :apartment_ids,
-                   collection: @available_apartments,
-                   value_method: :id,
-                   text_method: :label_with_building,
-                   target: "apartmentInputs" %>
-        <small class="form-text text-secondary">Visivel apenas quando o tipo for morador.</small>
+        <%= label_tag :building_id_filter, "Prédio", class: "form-label" %>
+        <%= select_tag :building_id_filter,
+                       options_for_select([["Selecione um prédio", ""]] + @available_buildings.map { |building| [building.name, building.id] }, @selected_building_id),
+                       class: "form-select",
+                       data: {
+                         action: "change->user-role-form#buildingChanged",
+                         user_role_form_target: "buildingSelect"
+                       } %>
+        <small class="form-text text-secondary d-block mt-2">
+          Primeiro escolha o prédio. Depois o sistema mostra apenas os apartamentos disponíveis daquele bloco.
+        </small>
+
+        <div class="mt-3 d-grid gap-3" data-user-role-form-target="apartmentGroups">
+          <% @available_buildings.each do |building| %>
+            <div class="d-none" data-user-role-form-target="apartmentGroup" data-building-id-value="<%= building.id %>">
+              <div class="border rounded-3 p-3 bg-light-subtle">
+                <h6 class="mb-3"><%= building.name %></h6>
+
+                <%= render "association_checkboxes",
+                           form: form,
+                           field: :apartment_ids,
+                           collection: (@available_apartments_by_building[building.id] || []),
+                           value_method: :id,
+                           text_method: :identificator,
+                           target: "apartmentInputs" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <small class="form-text text-secondary d-block mt-2">Visivel apenas quando o tipo for morador.</small>
       </div>
     <% end %>
 

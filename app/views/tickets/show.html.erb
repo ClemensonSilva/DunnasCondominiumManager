@@ -32,12 +32,43 @@
         <%= render "show_detail_item", label: "Status", value: @ticket.ticket_status&.title || "-" %>
         <%= render "show_detail_item", label: "Solicitante", value: ticket_person_display(@ticket.user) %>
         <%= render "show_detail_item", label: "Colaborador responsavel", value: ticket_person_display(@ticket.collaborator, "Nao atribuido") %>
-        <%= render "show_detail_item", label: "Anexos", value: @ticket.attachments.presence || "-" %>
         <%= render "show_detail_item", label: "Criado em", value: ticket_datetime_display(@ticket.created_at) %>
         <%= render "show_detail_item", label: "Atualizado em", value: ticket_datetime_display(@ticket.updated_at) %>
         <%= render "show_detail_item", label: "Finalizacao", value: ticket_datetime_display(@ticket.finished_at) %>
         <%= render "show_detail_item", label: "Descricao", value: @ticket.description.presence || "Sem descricao.", col_classes: "col-12", value_tag: :p, value_classes: "mb-0" %>
       </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h6 mb-0">Arquivos do ticket</h2>
+        <span class="badge text-bg-light border"><%= pluralize(@ticket.files.count, "arquivo") %></span>
+      </div>
+
+      <% if @ticket.files.attached? %>
+        <ul class="list-group list-group-flush">
+          <% @ticket.files.each do |file| %>
+            <li class="list-group-item px-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+              <div>
+                <p class="mb-0 fw-semibold"><%= file.filename %></p>
+                <small class="text-secondary">
+                  <%= number_to_human_size(file.byte_size) %> • adicionado por <%= ticket_person_display(@ticket.user) %>
+                </small>
+              </div>
+
+              <div>
+                <%= link_to "Baixar",
+                            rails_blob_path(file, disposition: "attachment"),
+                            class: "btn btn-sm btn-outline-secondary" %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-secondary mb-0">Nenhum arquivo anexado ao ticket.</p>
+      <% end %>
     </div>
   </div>
 

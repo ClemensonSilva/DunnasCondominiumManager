@@ -72,8 +72,24 @@
                   </div>
 
                   <div class="col-12">
-                    <%= form.label :attachments, "Anexos", class: "form-label" %>
-                    <%= form.text_field :attachments, class: "form-control" %>
+                    <%= form.label :files, "Anexos", class: "form-label" %>
+                    <%= form.file_field :files,
+                                        multiple: true,
+                                        direct_upload: true,
+                                        accept: "image/png,image/jpeg,application/pdf",
+                                        class: "form-control" %>
+                    <small class="text-secondary">Voce pode selecionar um ou mais arquivos (PNG, JPEG, PDF).</small>
+
+                    <% if @ticket.files.attached? %>
+                      <div class="mt-2 p-2 border rounded bg-light-subtle">
+                        <p class="mb-2 small fw-semibold">Arquivos ja anexados:</p>
+                        <ul class="mb-0 ps-3 small">
+                          <% @ticket.files.each do |file| %>
+                            <li><%= file.filename %> (<%= number_to_human_size(file.byte_size) %>)</li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
                   </div>
                 <% end %>
               </div>

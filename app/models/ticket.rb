@@ -1,5 +1,7 @@
 class Ticket < ApplicationRecord
   CLOSED_STATUS_TITLE = "Fechado".freeze
+  ALLOWED_FILE_TYPES = [ "image/png", "image/jpeg", "application/pdf" ].freeze
+  MAX_FILE_SIZE = 4.megabytes
 
   belongs_to :user
   belongs_to :collaborator, class_name: "User", optional: true
@@ -8,10 +10,12 @@ class Ticket < ApplicationRecord
   belongs_to :ticket_type
 
   has_many :comments, dependent: :destroy
+  has_many_attached :files, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 50 }
   validates :description, presence: true, length: { maximum: 200 }
 
+  validate :validate_files
   validate :collaborator_must_be_a_collaborator_role
   validate :colaborator_must_be_inside_scope_of_ticket
 
@@ -56,6 +60,8 @@ class Ticket < ApplicationRecord
   end
 
   # Explicit business command to close a ticket in one place.
+  # Cria uma transação para garantir que a leitura do estado atual e a atualização sejam atômicas,
+  #  evitando condições de corrida
   def close!(user)
     with_lock do
       reload
@@ -80,13 +86,27 @@ class Ticket < ApplicationRecord
 
   private
 
+  def validate_files
+    return unless files.attached?
+
+    files.each do |file|
+      unless ALLOWED_FILE_TYPES.include?(file.blob.content_type)
+        errors.add(:files, "deve conter apenas PNG, JPEG ou PDF")
+      end
+
+      if file.blob.byte_size > MAX_FILE_SIZE
+        errors.add(:files, "deve conter arquivos menores que 4MB")
+      end
+    end
+  end
+
   def set_default_status
     self.ticket_status ||= TicketStatus.find_by(is_default: true)
   end
   def colaborator_must_be_inside_scope_of_ticket
     return if collaborator_id.blank? || ticket_type_id.blank?
 
-    unless collaborator&.scopes&.include?(ticket_type.scope)
+    unless collaborator.scopes.exists?(id: ticket_type.scope_id)
       errors.add(:collaborator, "deve ter escopo compatível com o tipo do ticket")
     end
   end

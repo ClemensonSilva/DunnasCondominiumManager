@@ -37,6 +37,23 @@
           <% end %>
         </p>
       </div>
+
+      <% if comment.files.attached? %>
+        <div class="pt-2 mt-2 border-top">
+          <p class="small fw-semibold mb-2">Arquivos anexados</p>
+          <div class="d-flex flex-column gap-2">
+            <% comment.files.each do |file| %>
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 rounded border p-2 bg-light-subtle">
+                <div>
+                  <p class="mb-0 small fw-semibold"><%= file.filename %></p>
+                  <small class="text-secondary"><%= number_to_human_size(file.byte_size) %></small>
+                </div>
+                <%= link_to "Baixar", rails_blob_path(file, disposition: "attachment"), class: "btn btn-sm btn-outline-secondary" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </article>
