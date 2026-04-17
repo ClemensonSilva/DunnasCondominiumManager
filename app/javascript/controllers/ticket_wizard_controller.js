@@ -13,6 +13,7 @@ export default class extends Controller {
     "summaryTitle",
     "summaryDescription",
     "summaryAttachments",
+    "filesInput",
     "summaryFinishedAt",
     "summaryStatus",
     "estimatedDisplay",
@@ -154,7 +155,7 @@ export default class extends Controller {
     }
 
     if (this.hasSummaryAttachmentsTarget) {
-      this.summaryAttachmentsTarget.textContent = readField("#ticket_attachments")
+      this.summaryAttachmentsTarget.textContent = this.filesSummary()
     }
 
     const estimatedDate = this.resolveEstimatedFinishedAt()
@@ -175,6 +176,17 @@ export default class extends Controller {
     if (this.hasSummaryStatusTarget) {
       this.summaryStatusTarget.textContent = readField("#ticket_ticket_status_id")
     }
+  }
+
+  filesSummary() {
+    if (!this.hasFilesInputTarget) return "-"
+
+    const selectedFiles = Array.from(this.filesInputTarget.files || [])
+    if (selectedFiles.length === 0) return "Nenhum arquivo"
+
+    if (selectedFiles.length === 1) return selectedFiles[0].name
+
+    return `${selectedFiles.length} arquivos selecionados`
   }
 
   reset() {

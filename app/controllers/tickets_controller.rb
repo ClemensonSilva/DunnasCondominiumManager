@@ -21,7 +21,7 @@ class TicketsController < ApplicationController
 
   # GET /tickets/1 or /tickets/1.json
   def show
-    @comments = @ticket.comments
+    @comments = @ticket.comments.includes(:user, files_attachments: :blob)
   end
 
   # GET /tickets/new
@@ -102,7 +102,7 @@ class TicketsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ticket_params
       if current_user&.resident? || (current_user&.admin? && action_name == "create")
-        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, :attachments ])
+        params.expect(ticket: [ :apartment_id, :ticket_type_id, :title, :description, files: [] ])
       else
         # Permitir que colaboradores e admins atualizem o status e a data de conclusão dos tickets apenas, dando total dominio do ticket ao criador, evitando confusão e erros
         params.expect(ticket: [ :ticket_status_id, :finished_at ])

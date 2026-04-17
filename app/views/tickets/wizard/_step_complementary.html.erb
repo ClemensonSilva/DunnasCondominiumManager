@@ -4,8 +4,14 @@
       <h3 class="h6 mb-3">Etapa 3. Informacoes complementares</h3>
       <div class="row g-3">
         <div class="col-12 col-lg-6">
-          <%= form.label :attachments, "Anexos: pode ser uma foto ou documento", class: "form-label" %>
-          <%= form.text_field :attachments, class: "form-control", placeholder: "Link, nome do arquivo ou referencia" %>
+          <%= form.label :files, "Anexos (opcional)", class: "form-label" %>
+          <%= form.file_field :files,
+                              multiple: true,
+                              direct_upload: true,
+                              accept: "image/png,image/jpeg,application/pdf",
+                              class: "form-control",
+                              data: { ticket_wizard_target: "filesInput" } %>
+          <small class="text-secondary">PNG, JPEG ou PDF. Maximo 4MB por arquivo.</small>
         </div>
 
         <div class="col-12 col-lg-6">

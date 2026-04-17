@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   def index
     @comments = @ticket.comments
       .accessible_by(current_ability, :read)
-      .includes(:user)
+      .includes(:user, files_attachments: :blob)
       .order(created_at: :asc)
 
     @close_path = modal_close_path
@@ -120,6 +120,6 @@ class CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.expect(comment: [ :content ])
+      params.expect(comment: [ :content, files: [] ])
     end
 end

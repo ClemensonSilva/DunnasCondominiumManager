@@ -1,12 +1,16 @@
-<% content_for :title, "Editing comment" %>
+<% content_for :title, "Editar comentario" %>
 
-<h1>Editing comment</h1>
+<section class="container-fluid px-0">
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <h1 class="h4 mb-1">Editar comentario</h1>
+      <p class="text-secondary mb-0">Atualize o texto e os arquivos deste comentario.</p>
+    </div>
+  </div>
 
-<%= render "form", comment: @comment %>
-
-<br>
-
-<div>
-  <%= link_to "Show this comment", ticket_comment_path(@ticket, @comment) %> |
-  <%= link_to "Back to comments", ticket_comments_path(@ticket) %>
-</div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <%= render "form", comment: @comment %>
+    </div>
+  </div>
+</section>

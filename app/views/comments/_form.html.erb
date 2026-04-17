@@ -16,6 +16,16 @@
     <%= form.textarea :content, rows: 5, class: "form-control", placeholder: "Digite seu comentário aqui...", required: true %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :files, "Anexar arquivos (opcional)", class: "form-label" %>
+    <%= form.file_field :files,
+                        multiple: true,
+                        direct_upload: true,
+                        accept: "image/png,image/jpeg,application/pdf",
+                        class: "form-control" %>
+    <small class="text-secondary">Formatos aceitos: PNG, JPEG e PDF. Maximo de 4MB por arquivo.</small>
+  </div>
+
   <div class="d-flex gap-2">
     <%= form.submit "Enviar comentário", class: "btn btn-primary" %>
     <%= link_to "Cancelar", @comment.ticket, class: "btn btn-outline-secondary" %>
