@@ -1,10 +1,54 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Detalhes do comentario" %>
 
-<%= render @comment %>
+<section class="container-fluid px-0">
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <h1 class="h4 mb-1">Comentario</h1>
+      <p class="text-secondary mb-0">Detalhes da interacao no chamado.</p>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this comment", edit_comment_path(@comment) %> |
-  <%= link_to "Back to comments", comments_path %>
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <p class="mb-2"><%= @comment.content.presence || "Sem descricao." %></p>
+      <small class="text-secondary">Criado em <%= l(@comment.created_at, format: :short) %></small>
+    </div>
+  </div>
 
-  <%= button_to "Destroy this comment", @comment, method: :delete %>
-</div>
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h6 mb-0">Arquivos do comentario</h2>
+        <span class="badge text-bg-light border"><%= pluralize(@comment.files.count, "arquivo") %></span>
+      </div>
+
+      <% if @comment.files.attached? %>
+        <ul class="list-group list-group-flush">
+          <% @comment.files.each do |file| %>
+            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-0 fw-semibold"><%= file.filename %></p>
+                <small class="text-secondary"><%= number_to_human_size(file.byte_size) %></small>
+              </div>
+              <%= link_to "Baixar", rails_blob_path(file, disposition: "attachment"), class: "btn btn-sm btn-outline-secondary" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-secondary mb-0">Nenhum arquivo anexado neste comentario.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= link_to "Editar comentario", edit_ticket_comment_path(@ticket, @comment), class: "btn btn-outline-primary" %>
+    <%= link_to "Voltar para timeline", ticket_comments_path(@ticket), class: "btn btn-outline-secondary" %>
+    <% if can?(:destroy, @comment) %>
+      <%= button_to "Excluir comentario",
+                    ticket_comment_path(@ticket, @comment),
+                    method: :delete,
+                    class: "btn btn-outline-danger",
+                    form: { data: { turbo_confirm: "Tem certeza que deseja excluir este comentario?" } } %>
+    <% end %>
+  </div>
+</section>

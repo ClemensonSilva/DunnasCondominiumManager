@@ -1,42 +1,36 @@
-<div id="<%= dom_id ticket %>">
-  <div>
-    <strong>User:</strong>
-    <%= ticket.user_id %>
-  </div>
+<div data-controller="modal">
+  <article id="<%= dom_id ticket %>" class="card border-0 shadow-sm h-100">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+        <h2 class="h6 mb-0"><%= ticket.title.presence || "Chamado sem titulo" %></h2>
+        <% status_title = ticket.ticket_status&.title || "Sem status" %>
+        <span class="badge <%= ticket_status_badge_class(status_title) %>"><%= status_title %></span>
+      </div>
 
-  <div>
-    <strong>Apartment:</strong>
-    <%= ticket.apartment_id %>
-  </div>
+      <p class="mb-1">
+        <span class="text-secondary">Apartamento:</span>
+        <strong><%= ticket.apartment&.identificator || "-" %></strong>
+      </p>
 
-  <div>
-    <strong>Ticket status:</strong>
-    <%= ticket.ticket_status_id %>
-  </div>
+      <p class="mb-3">
+        <span class="text-secondary">Tipo de reparo:</span>
+        <strong><%= ticket.ticket_type&.title || "-" %></strong>
+      </p>
 
-  <div>
-    <strong>Ticket type:</strong>
-    <%= ticket.ticket_type_id %>
-  </div>
-
-  <div>
-    <strong>Title:</strong>
-    <%= ticket.title %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= ticket.description %>
-  </div>
-
-  <div>
-    <strong>Attachments:</strong>
-    <%= ticket.attachments %>
-  </div>
-
-  <div>
-    <strong>Finished at:</strong>
-    <%= ticket.finished_at %>
-  </div>
-
+      <div>
+        <%= link_to "Ver detalhes", ticket_path(ticket), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary" %>
+        <%= link_to "Ver comentarios",
+                    ticket_comments_path(ticket, return_to: request.fullpath),
+                    data: { turbo_frame: "modal_container" },
+                    class: "btn btn-sm btn-outline-secondary" %>
+        <% if current_user&.colaborator? && ticket.available_for_pickup? && can?(:take, ticket) %>
+          <%= button_to "Pegar ticket",
+                        take_ticket_path(ticket),
+                        method: :patch,
+                        class: "btn btn-sm btn-outline-success",
+                        form_class: "d-inline" %>
+        <% end %>
+      </div>
+    </div>
+  </article>
 </div>

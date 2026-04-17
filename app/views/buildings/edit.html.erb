@@ -1,12 +1,31 @@
-<% content_for :title, "Editing building" %>
+<% content_for :title, "Edit building" %>
 
-<h1>Editing building</h1>
+<% if turbo_frame_request? %>
+  <%= turbo_frame_tag "modal_container" do %>
+    <div data-controller="modal" data-modal-auto-open-value="true" data-modal-close-path-value="<%= buildings_path %>">
+      <div class="modal fade" id="buildingEditModal-<%= @building.id %>" tabindex="-1" aria-labelledby="buildingEditModalLabel-<%= @building.id %>" aria-hidden="true" data-modal-target="modal">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+              <h2 class="modal-title fs-5" id="buildingEditModalLabel-<%= @building.id %>">Editar prédio</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
 
-<%= render "form", building: @building %>
+            <%= render "form", building: @building %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <h1>Edit building</h1>
 
-<br>
+  <%= render "form", building: @building %>
 
-<div>
-  <%= link_to "Show this building", @building %> |
-  <%= link_to "Back to buildings", buildings_path %>
-</div>
+  <br>
+
+  <div>
+    <%= link_to "Show this building", @building %> |
+    <%= link_to "Back to buildings", buildings_path %>
+  </div>
+<% end %>

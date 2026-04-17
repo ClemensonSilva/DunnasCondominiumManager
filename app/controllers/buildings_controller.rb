@@ -1,13 +1,51 @@
 class BuildingsController < ApplicationController
+  load_and_authorize_resource
   before_action :set_building, only: %i[ show edit update destroy ]
 
   # GET /buildings or /buildings.json
   def index
-    @buildings = Building.all
+    if current_user&.admin?
+          @buildings = Building.all
+    end
+
+    if current_user.resident?
+      @buildings = User.find(current_user.id).buildings_of_resident
+    end
+    if current_user.colaborator?
+      scope_ids = current_user.scope_ids
+      @buildings = Building.joins(tickets: :ticket_type)
+                           .where(ticket_types: { scope_id: scope_ids })
+                           .distinct
+
+    end
+  end
+  # GET /buildings/search_by_name usado pelo Stimulus para buscar por nome
+  def search_by_name
+    @buildings = Building.search_by_name(params[:name])
+    render :index
   end
 
   # GET /buildings/1 or /buildings/1.json
   def show
+    stats = BuildingStatistics.new(@building)
+
+    @tickets = stats.tickets_for_show.merge(Ticket.accessible_by(current_ability, :read))
+    @tickets_count = @tickets.size
+    @residents_count = stats.residents_count
+
+    return unless current_user&.admin?
+
+    @total_apartments = stats.total_apartments
+    @occupied_apartments_count = stats.occupied_apartments_count
+    @occupancy_rate = stats.occupancy_rate
+    @closed_tickets_count = stats.closed_tickets_count(@tickets)
+    @open_tickets_count = stats.open_tickets_count(@tickets)
+    @overdue_tickets_count = stats.overdue_tickets_count(@tickets)
+    @average_resolution_hours = stats.average_resolution_hours(@tickets)
+    @top_ticket_types = stats.top_ticket_types(3, @tickets)
+    @collaborator_activity = stats.collaborator_activity(3, @tickets)
+    @last_ticket_created_at = stats.last_ticket_created_at(@tickets)
+    @last_ticket_updated_at = stats.last_ticket_updated_at(@tickets)
   end
 
   # GET /buildings/new
@@ -21,10 +59,10 @@ class BuildingsController < ApplicationController
 
   # POST /buildings or /buildings.json
   def create
-    @building = Building.new(building_params)
+    @building = Buildings::Create.new(building_params).call
 
     respond_to do |format|
-      if @building.save
+      if @building.persisted?
         format.html { redirect_to @building, notice: "Building was successfully created." }
         format.json { render :show, status: :created, location: @building }
       else
@@ -65,6 +103,6 @@ class BuildingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def building_params
-      params.expect(building: [ :name, :condominium_id, :number_of_apartments, :number_of_floors ])
+      params.expect(building: [ :name, :apartments_per_floor, :number_of_floors ])
     end
 end

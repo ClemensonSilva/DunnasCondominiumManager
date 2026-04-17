@@ -1,0 +1,33 @@
+<% content_for :title, "Tipos de Chamados" %>
+
+<%= render "shared/page_header",
+           title: "Tipos de chamados",
+           subtitle: "Configure categorias de chamado com escopo e SLA.",
+           buttons: page_header_button(
+             "+ Novo tipo",
+             new_ticket_type_path,
+             ability: :create,
+             subject: TicketType,
+             options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+           ) %>
+
+<div id="ticket_types" class="row g-4">
+  <% if @ticket_types.any? %>
+    <% @ticket_types.each do |ticket_type| %>
+      <div class="col-12 col-md-6 col-lg-4">
+        <%= render ticket_type %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="col-12">
+      <div class="text-center p-5 bg-light rounded border border-dashed">
+        <h3 class="h5 text-muted">Nenhum tipo de chamado encontrado.</h3>
+        <p class="text-muted mb-4">Cadastre o primeiro tipo para habilitar a classificação dos tickets.</p>
+        <%= link_to "Criar o primeiro tipo",
+                    new_ticket_type_path,
+                    data: { turbo_frame: "modal_container" },
+                    class: "btn btn-outline-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

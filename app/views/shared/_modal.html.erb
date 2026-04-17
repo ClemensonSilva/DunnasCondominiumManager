@@ -1,0 +1,35 @@
+<%
+# app/views/shared/_modal.html.erb 
+#Documentação do Modal Genérico
+# Este é um template de modal genérico que pode ser reutilizado em toda a aplicação.
+# Ele é controlado por um Stimulus Controller chamado "modal" que gerencia a abertura e fechamento do modal, além de outras funcionalidades como auto abertura e foco.
+# Para usar este modal, basta renderizá-lo em qualquer view e passar um título e o conteúdo desejado dentro do bloco.
+%>
+
+<% close_path = local_assigns[:close_path].presence %>
+
+
+<%= turbo_frame_tag "modal_container" do %>
+  <%= tag.div class: "modal fade",
+              id: "dynamicModal",
+              tabindex: "-1",
+              data: {
+                controller: "modal",
+                modal_auto_open_value: true,
+                modal_close_path_value: close_path,
+                modal_target: "modal"
+              } do %>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><%= title %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

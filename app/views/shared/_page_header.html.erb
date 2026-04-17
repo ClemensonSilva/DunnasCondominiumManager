@@ -1,0 +1,36 @@
+<%# 
+  DOCUMENTAÇÃO DO COMPONENTE: Page Header
+  ======================================
+  Descrição: Cabeçalho responsivo com título, subtítulo opcional e área de ações.
+  
+  Parâmetros (Locais):
+  - title (String): O título principal da página (H1). Opcional.
+  - subtitle (String): Texto descritivo que aparece abaixo do título. Opcional.
+  - buttons (HTML String): Bloco de botões ou links. Utilize 'link_to'. Opcional.
+
+  Exemplo de Uso Simples:
+  <%= render "shared/page_header", title: "Meus Escopos" % >
+
+
+<%# Container com flexbox responsivo: empilha no celular, lado a lado no desktop %>
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4 pb-3 border-bottom">
+  
+  <%# Lado Esquerdo/Topo: Título e Subtítulo %>
+  <div>
+    <% if local_assigns[:title].present? %>
+      <h1 class="h2 mb-1 text-dark fw-bold"><%= title %></h1>
+    <% end %>
+
+    <% if local_assigns[:subtitle].present? %>
+      <p class="text-secondary mb-0"><%= subtitle %></p>
+    <% end %>
+  </div>
+
+  <%# Lado Direito/Base: Botões %>
+  <% if local_assigns[:buttons].present? %>
+    <div class="d-flex gap-2">
+      <%= buttons %>
+    </div>
+  <% end %>
+  
+</div>

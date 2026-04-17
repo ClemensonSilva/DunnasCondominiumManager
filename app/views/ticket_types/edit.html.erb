@@ -1,0 +1,3 @@
+<%= render layout: "shared/modal", locals: { title: "Editar tipo de chamado", close_path: ticket_types_path } do %>
+  <%= render "form", ticket_type: @ticket_type %>
+<% end %>

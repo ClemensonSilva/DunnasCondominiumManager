@@ -1,0 +1,11 @@
+<div class="card border-0 shadow-sm">
+  <div class="card-body text-center py-5">
+    <h2 class="h5 mb-2">Nenhum chamado encontrado</h2>
+    <p class="text-secondary mb-3">
+      <%= can?(:create, Ticket) ? "Crie o primeiro ticket para iniciar o acompanhamento." : "Acompanhe os tickets do seu escopo por aqui." %>
+    </p>
+    <% if can?(:create, Ticket) %>
+      <%= link_to "Criar ticket", new_ticket_path, class: "btn btn-outline-primary" %>
+    <% end %>
+  </div>
+</div>

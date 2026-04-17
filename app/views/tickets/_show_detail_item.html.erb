@@ -1,0 +1,8 @@
+<% col_classes = local_assigns.fetch(:col_classes, "col-12 col-md-6") %>
+<% value_tag = local_assigns.fetch(:value_tag, :strong) %>
+<% value_classes = local_assigns.fetch(:value_classes, nil) %>
+
+<div class="<%= col_classes %>">
+  <span class="text-secondary d-block"><%= label %></span>
+  <%= content_tag value_tag, value, class: value_classes %>
+</div>

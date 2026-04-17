@@ -1,11 +1,32 @@
 <% content_for :title, "New building" %>
 
-<h1>New building</h1>
+<% if turbo_frame_request? %>
+  <%= turbo_frame_tag "modal_container" do %>
+    <div data-controller="modal" data-modal-auto-open-value="true" data-modal-close-path-value="<%= buildings_path %>">
+      <div class="modal fade" id="buildingNewModal" tabindex="-1" aria-labelledby="buildingNewModalLabel" aria-hidden="true" data-modal-target="modal">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+              <h2 class="modal-title fs-5" id="buildingNewModalLabel">Novo prédio</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
 
-<%= render "form", building: @building %>
+            <%= render "form", building: @building, confirm_before_submit: true %>
 
-<br>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <h1>New building</h1>
 
-<div>
-  <%= link_to "Back to buildings", buildings_path %>
-</div>
+  <%= render "form", building: @building, confirm_before_submit: true %>
+
+  <br>
+
+  <div>
+    <%= link_to "Back to buildings", buildings_path %>
+  </div>
+<% end %>

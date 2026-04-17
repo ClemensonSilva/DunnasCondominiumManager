@@ -1,0 +1,39 @@
+<% buildings_active = controller_name == "buildings" %>
+<% tickets_active = %w[tickets comments].include?(controller_name) %>
+<% settings_tree_open = %w[ticket_types ticket_statuses scopes].include?(controller_name) %>
+<% users_tree_open = controller_name == "users" %>
+
+<%= link_to "Predios", buildings_path, class: "nav-link px-3 py-2 rounded #{buildings_active ? 'bg-light text-dark' : 'text-white'}" %>
+
+<%= link_to "Tickets", tickets_path, class: "nav-link px-3 py-2 rounded #{tickets_active ? 'bg-light text-dark' : 'text-white'}" %>
+
+<div class="mb-1">
+  <div class="d-flex align-items-center justify-content-between gap-2 <%= settings_tree_open ? 'bg-light text-dark rounded' : 'text-white' %>">
+    <span class="nav-link flex-grow-1 px-3 py-2 text-decoration-none fw-medium rounded <%= settings_tree_open ? 'text-dark' : 'text-white' %>">Configurações</span>
+    <button type="button" class="btn btn-sm p-0 border-0 bg-transparent text-reset" data-bs-toggle="collapse" data-bs-target="#settingsTree" aria-expanded="<%= settings_tree_open %>" aria-controls="settingsTree">
+      <span class="small"><%= settings_tree_open ? '▾' : '▸' %></span>
+    </button>
+  </div>
+  <div class="collapse <%= 'show' if settings_tree_open %>" id="settingsTree">
+    <div class="mt-1 ms-3 ps-2 border-start border-light border-opacity-25 d-grid gap-1">
+      <%= link_to "Tipos de chamados", ticket_types_path, class: "nav-link py-1 px-2 rounded #{controller_name == 'ticket_types' ? 'bg-light text-dark' : 'text-white'}" %>
+      <%= link_to "Status de chamados", ticket_statuses_path, class: "nav-link py-1 px-2 rounded #{controller_name == 'ticket_statuses' ? 'bg-light text-dark' : 'text-white'}" %>
+      <%= link_to "Escopos", scopes_path, class: "nav-link py-1 px-2 rounded #{controller_name == 'scopes' ? 'bg-light text-dark' : 'text-white'}" %>
+    </div>
+  </div>
+</div>
+
+<div class="mb-1">
+  <div class="d-flex align-items-center justify-content-between gap-2 <%= users_tree_open ? 'bg-light text-dark rounded' : 'text-white' %>">
+    <%= link_to "Usuarios", users_path, class: "nav-link flex-grow-1 px-3 py-2 text-decoration-none fw-medium rounded #{users_tree_open ? 'text-dark' : 'text-white'}" %>
+    <button type="button" class="btn btn-sm p-0 border-0 bg-transparent text-reset" data-bs-toggle="collapse" data-bs-target="#usersTree" aria-expanded="<%= users_tree_open %>" aria-controls="usersTree">
+      <span class="small"><%= users_tree_open ? '▾' : '▸' %></span>
+    </button>
+  </div>
+  <div class="collapse <%= 'show' if users_tree_open %>" id="usersTree">
+    <div class="mt-1 ms-3 ps-2 border-start border-light border-opacity-25 d-grid gap-1">
+      <%= link_to "Residentes", residents_users_path, class: "nav-link py-1 px-2 rounded #{controller_name == 'users' && action_name == 'residents' ? 'bg-light text-dark' : 'text-white'}" %>
+      <%= link_to "Colaboradores", colaborators_users_path, class: "nav-link py-1 px-2 rounded #{controller_name == 'users' && action_name == 'colaborators' ? 'bg-light text-dark' : 'text-white'}" %>
+    </div>
+  </div>
+</div>

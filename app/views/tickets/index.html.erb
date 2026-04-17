@@ -1,16 +1,27 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Tickets" %>
 
-<h1>Tickets</h1>
+<section class="container-fluid px-0">
+  <%= render "shared/page_header",
+             title: "Tickets",
+             subtitle: "Visao geral dos tickets cadastrados.",
+             buttons: page_header_button(
+               "+ Novo Ticket",
+               new_ticket_path,
+               ability: :create,
+               subject: Ticket,
+               options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+             ) %>
 
-<div id="tickets">
-  <% @tickets.each do |ticket| %>
-    <%= render ticket %>
-    <p>
-      <%= link_to "Show this ticket", ticket %>
-    </p>
+  <%= render "filters",
+             ticket_status_filter_options: @ticket_status_filter_options,
+             ticket_type_filter_options: @ticket_type_filter_options,
+             apartment_filter_options: @apartment_filter_options %>
+
+  <% if @tickets.any? %>
+    <%= render "ticket_list", tickets: @tickets %>
   <% end %>
-</div>
 
-<%= link_to "New ticket", new_ticket_path %>
+  <% unless @tickets.any? %>
+    <%= render "empty_state" %>
+  <% end %>
+</section>

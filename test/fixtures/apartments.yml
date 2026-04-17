@@ -3,9 +3,9 @@
 one:
   building: one
   floor: 1
-  number: MyString
+  identificator: MyString
 
 two:
   building: two
   floor: 1
-  number: MyString
+  identificator: MyString

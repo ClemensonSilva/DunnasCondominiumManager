@@ -1,16 +1,24 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Buildings" %>
 
-<h1>Buildings</h1>
+<%= render "shared/page_header", 
+           title: "Predios", 
+           subtitle: "Visao geral dos predios cadastrados.",
+           buttons: page_header_button(
+             "+ Novo Predio",
+             new_building_path,
+             ability: :create,
+             subject: Building,
+             options: { data: { turbo_frame: "modal_container" }, class: "btn btn-primary shadow-sm" }
+           ) %>
 
-<div id="buildings">
-  <% @buildings.each do |building| %>
-    <%= render building %>
-    <p>
-      <%= link_to "Show this building", building %>
-    </p>
+<div class="mb-4">
+  <% if current_user.admin? %>
+  <%= render "layouts/search", path: buildings_path, placeholder: "Exemplo: Canário Verde" %>
   <% end %>
 </div>
 
-<%= link_to "New building", new_building_path %>
+<div id="buildings" class="row g-4">
+  <% @buildings.each do |building| %>
+    <%= render building %>
+  <% end %>
+</div>

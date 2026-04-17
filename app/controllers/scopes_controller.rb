@@ -1,4 +1,5 @@
 class ScopesController < ApplicationController
+  load_and_authorize_resource
   before_action :set_scope, only: %i[ show edit update destroy ]
 
   # GET /scopes or /scopes.json
@@ -25,7 +26,7 @@ class ScopesController < ApplicationController
 
     respond_to do |format|
       if @scope.save
-        format.html { redirect_to @scope, notice: "Scope was successfully created." }
+        format.html { redirect_to scopes_path, notice: "Scope was successfully created." }
         format.json { render :show, status: :created, location: @scope }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +39,7 @@ class ScopesController < ApplicationController
   def update
     respond_to do |format|
       if @scope.update(scope_params)
-        format.html { redirect_to @scope, notice: "Scope was successfully updated.", status: :see_other }
+        format.html { redirect_to scopes_path, notice: "Scope was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @scope }
       else
         format.html { render :edit, status: :unprocessable_entity }

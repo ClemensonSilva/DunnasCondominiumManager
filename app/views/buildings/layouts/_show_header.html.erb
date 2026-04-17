@@ -1,0 +1,13 @@
+<div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+  <div>
+    <h1 class="h2 mb-1"><%= @building.name %></h1>
+    <p class="text-secondary mb-0">Detalhes gerais e chamados relacionados ao predio.</p>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2">
+    <%= link_to "Voltar", buildings_path, class: "btn btn-outline-secondary" %>
+      <% if can? :create, Building %>
+    <%= link_to "Editar predio", edit_building_path(@building), class: "btn btn-primary", data: { turbo_frame: "modal_container" } %>
+      <% end %>
+  </div>
+</div>

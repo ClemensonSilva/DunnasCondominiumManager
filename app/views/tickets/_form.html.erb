@@ -1,9 +1,10 @@
-<%= form_with(model: ticket) do |form| %>
-  <% if ticket.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(ticket.errors.count, "error") %> prohibited this ticket from being saved:</h2>
+<% form_dom_id = local_assigns.fetch(:form_id, dom_id(ticket, ticket.persisted? ? :edit : :new)) %>
 
-      <ul>
+<%= form_with(model: ticket, id: form_dom_id, data: { controller: "modal", modal_modal_id_value: "ticketWizardModal", modal_auto_open_value: ticket.new_record?, turbo_frame: "_top" }) do |form| %>
+  <% if ticket.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h2 class="h6 mb-2"><%= pluralize(ticket.errors.count, "erro") %> impediram este chamado de ser salvo:</h2>
+      <ul class="mb-0 ps-3">
         <% ticket.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,47 +12,20 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
+  <% if ticket.persisted? %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4 p-lg-5 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+        <div>
+          <h2 class="h5 mb-2">Assistente de chamado</h2>
+          <p class="text-secondary mb-0">Abra o wizard para preencher o chamado em etapas e revisar antes de salvar.</p>
+        </div>
 
-  <div>
-    <%= form.label :apartment_id, style: "display: block" %>
-    <%= form.text_field :apartment_id %>
-  </div>
+        <button type="button" class="btn btn-primary" data-action="modal#open" data-modal-id-param="ticketWizardModal">
+          Abrir assistente
+        </button>
+      </div>
+    </div>
+  <% end %>
 
-  <div>
-    <%= form.label :ticket_status_id, style: "display: block" %>
-    <%= form.text_field :ticket_status_id %>
-  </div>
-
-  <div>
-    <%= form.label :ticket_type_id, style: "display: block" %>
-    <%= form.text_field :ticket_type_id %>
-  </div>
-
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
-  </div>
-
-  <div>
-    <%= form.label :attachments, style: "display: block" %>
-    <%= form.text_field :attachments %>
-  </div>
-
-  <div>
-    <%= form.label :finished_at, style: "display: block" %>
-    <%= form.datetime_field :finished_at %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= render "wizard_modal", form: form, ticket: ticket, form_dom_id: form_dom_id, auto_calculate_finished_at: true %>
 <% end %>

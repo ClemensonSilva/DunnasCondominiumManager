@@ -1,9 +1,26 @@
 class UsersController < ApplicationController
+  load_and_authorize_resource
   before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :prepare_form_collections, only: %i[ new create edit update ]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    @users_title = "Usuarios"
+    @users = users_scope
+  end
+
+  def residents
+    authorize! :read, User
+    @users_title = "Residentes"
+    @users = User.residents
+    render :index
+  end
+
+  def colaborators
+    authorize! :read, User
+    @users_title = "Colaboradores"
+    @users = User.colaborators
+    render :index
   end
 
   # GET /users/1 or /users/1.json
@@ -25,11 +42,9 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
+        format.html { redirect_to @user, notice: "Usuario foi criado com sucesso." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -37,12 +52,10 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1 or /users/1.json
   def update
     respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @user }
+      if update_user
+        format.html { redirect_to @user, notice: "Usuario foi atualizado com sucesso.", status: :see_other }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -52,8 +65,7 @@ class UsersController < ApplicationController
     @user.destroy!
 
     respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
+      format.html { redirect_to users_path, notice: "Usuario foi excluido com sucesso.", status: :see_other }
     end
   end
 
@@ -65,6 +77,36 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.expect(user: [ :name, :email, :user_type, :password_digest ])
+      if current_user&.admin?
+        params.expect(user: [ :name, :email, :user_type, :password, :password_confirmation, { scope_ids: [], apartment_ids: [] } ])
+      else
+        params.expect(user: [ :name, :email, :password, :password_confirmation ])
+      end
+    end
+
+    def users_scope
+      User.accessible_by(current_ability, :read).includes(:scopes, :apartments)
+    end
+
+    def prepare_form_collections
+      @available_scopes = Scope.order(:title)
+      @available_buildings = Building.order(:name)
+      @available_apartments_by_building = Apartment.joins(:building)
+                                                  .includes(:building)
+                                                  .order("buildings.name ASC, apartments.identificator ASC")
+                                                  .group_by(&:building_id)
+      @selected_building_id = params[:building_id_filter].presence || @user.apartments.first&.building_id
+    end
+
+    def update_user
+      if password_blank_for_update?
+        @user.update_without_password(user_params.except(:password, :password_confirmation))
+      else
+        @user.update(user_params)
+      end
+    end
+
+    def password_blank_for_update?
+      user_params[:password].blank? && user_params[:password_confirmation].blank?
     end
 end

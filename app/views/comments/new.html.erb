@@ -1,11 +1,16 @@
-<% content_for :title, "New comment" %>
+<% content_for :title, "Novo comentário" %>
 
-<h1>New comment</h1>
+<section class="container-fluid px-0">
+  <div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+      <h1 class="h4 mb-1">Adicionar comentário</h1>
+      <p class="text-secondary mb-0">Deixe seu comentário sobre o chamado.</p>
+    </div>
+  </div>
 
-<%= render "form", comment: @comment %>
-
-<br>
-
-<div>
-  <%= link_to "Back to comments", comments_path %>
-</div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <%= render "form", comment: @comment %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<aside class="position-fixed top-0 start-0 vh-100 col-12 col-md-3 col-lg-2 text-white d-flex flex-column justify-content-between p-3" style="background-color: #1b4d5c;">
+	<div>
+		<div class="border-bottom border-light border-opacity-25 pb-3 mb-3">
+			<h6 class="mb-1"><%= current_user.name.presence || "Usuario" %></h6>
+			<small class="text-white-50 text-capitalize"><%= current_user.user_type %></small>
+			<br>
+			<small class="text-white-50"><%= current_user.email %></small>
+		</div>
+
+		<nav class="nav nav-pills flex-column gap-1" aria-label="Operacao">
+			<% if current_user.admin? %>
+				<%= render "layouts/sidebars/side_bar_admin" %>
+			<% elsif current_user.colaborator? %>
+				<%= render "layouts/sidebars/side_bar_colaborator" %>
+			<% else %>
+				<%= render "layouts/sidebars/side_bar_resident" %>
+			<% end %>
+		</nav>
+	</div>
+
+	<div>
+		<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-light text-dark w-100" %>
+	</div>
+</aside>

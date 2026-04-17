@@ -1,0 +1,18 @@
+<section>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Chamados do predio</h2>
+    <span class="badge text-bg-light border"><%= @tickets_count %> chamados</span>
+  </div>
+
+  <% if @tickets.any? %>
+    <div class="row g-3">
+      <%= render partial: "ticket_card", collection: @tickets, as: :ticket %>
+    </div>
+  <% else %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body py-4 text-secondary">
+        Nenhum chamado relacionado a este predio ate o momento.
+      </div>
+    </div>
+  <% end %>
+</section>

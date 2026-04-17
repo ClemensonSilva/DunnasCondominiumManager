@@ -1,0 +1,16 @@
+<div class="d-none" data-ticket-wizard-target="step">
+  <div class="card border-0 bg-light-subtle">
+    <div class="card-body p-4">
+      <h3 class="h6 mb-3">Etapa 2. Descreva o chamado</h3>
+      <div class="mb-3">
+        <%= form.label :title, "Titulo", class: "form-label" %>
+        <%= form.text_field :title, class: "form-control", placeholder: "Ex.: Vazamento na pia", required: true %>
+      </div>
+
+      <div>
+        <%= form.label :description, "Descricao", class: "form-label" %>
+        <%= form.text_area :description, class: "form-control", rows: 6, placeholder: "Explique o problema com detalhes", required: true %>
+      </div>
+    </div>
+  </div>
+</div>

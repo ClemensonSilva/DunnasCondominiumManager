@@ -1,0 +1,74 @@
+<section class="accordion mb-4" id="buildingInsightsAccordion">
+  <div class="accordion-item border-0 shadow-sm">
+    <h2 class="accordion-header" id="headingInsights">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInsights" aria-expanded="false" aria-controls="collapseInsights">
+        Insights avancados do predio
+      </button>
+    </h2>
+    <div id="collapseInsights" class="accordion-collapse collapse" aria-labelledby="headingInsights" data-bs-parent="#buildingInsightsAccordion">
+      <div class="accordion-body">
+        <div class="row g-3">
+          <div class="col-12 col-lg-3">
+            <%= render "buildings/layouts/insight_card", title: "Taxa de ocupacao" do %>
+              <p class="h4 mb-1"><%= @occupancy_rate %>%</p>
+              <p class="text-secondary mb-0"><%= @occupied_apartments_count %> de <%= @total_apartments %> apartamentos</p>
+            <% end %>
+          </div>
+
+          <div class="col-12 col-lg-3">
+            <%= render "buildings/layouts/insight_card", title: "Tempo medio de resolucao" do %>
+              <p class="h4 mb-0"><%= @average_resolution_hours ? "#{@average_resolution_hours}h" : "Sem dados" %></p>
+            <% end %>
+          </div>
+
+          <div class="col-12 col-lg-3">
+            <%= render "buildings/layouts/insight_card", title: "Tipos de reparo frequentes" do %>
+              <% if @top_ticket_types.any? %>
+                <ul class="list-unstyled mb-0">
+                  <% @top_ticket_types.each do |type_title, total| %>
+                    <li class="d-flex justify-content-between py-1 border-bottom">
+                      <span><%= type_title %></span>
+                      <strong><%= total %></strong>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-secondary mb-0">Sem dados no momento.</p>
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="col-12 col-lg-3">
+            <%= render "buildings/layouts/insight_card", title: "Colaboradores ativos" do %>
+              <% if @collaborator_activity.any? %>
+                <ul class="list-unstyled mb-0">
+                  <% @collaborator_activity.each do |collaborator_name, total| %>
+                    <li class="d-flex justify-content-between py-1 border-bottom">
+                      <span><%= collaborator_name.presence || "Sem nome" %></span>
+                      <strong><%= total %></strong>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="text-secondary mb-0">Nenhum atendimento vinculado ainda.</p>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+          <div>
+            <p class="text-secondary mb-1">Ultimo chamado criado</p>
+            <p class="mb-0 fw-semibold"><%= @last_ticket_created_at ? l(@last_ticket_created_at, format: :short) : "Sem registro" %></p>
+          </div>
+          <div>
+            <p class="text-secondary mb-1">Ultima atualizacao de chamado</p>
+            <p class="mb-0 fw-semibold"><%= @last_ticket_updated_at ? l(@last_ticket_updated_at, format: :short) : "Sem registro" %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

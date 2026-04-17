@@ -1,0 +1,59 @@
+<article class="card border-0 shadow-sm position-relative">
+  <div class="card-body">
+    <span
+      class="position-absolute top-0 start-0 translate-middle p-2 bg-primary border border-light rounded-circle"
+      aria-hidden="true"
+      style="margin-left: 0.75rem; margin-top: 1.1rem;"
+    ></span>
+
+    <div class="ms-2">
+      <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-2">
+        <div>
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+            <h3 class="h6 mb-0"><%= comment_owner_name(comment) %></h3>
+            <span class="<%= comment_owner_role_badge_class(comment) %>" aria-label="Tipo de usuario">
+              <%= comment_owner_role_label(comment) %>
+            </span>
+          </div>
+          <p class="text-secondary small mb-0"><%= comment_timeline_title(comment) %></p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-top" data-controller="expandable-text">
+        <p class="mb-0">
+          <span data-expandable-text-target="preview"><%= comment_preview_text(comment).presence || "Sem descricao." %></span>
+          <span class="d-none" data-expandable-text-target="full"><%= comment.content.presence || "Sem descricao." %></span>
+
+          <% if comment_preview_truncated?(comment) %>
+            <button
+              type="button"
+              class="btn btn-link btn-sm px-0 ms-1 align-baseline"
+              data-action="expandable-text#toggle"
+              data-expandable-text-target="toggle"
+              aria-expanded="false"
+            >
+              Ver mais
+            </button>
+          <% end %>
+        </p>
+      </div>
+
+      <% if comment.files.attached? %>
+        <div class="pt-2 mt-2 border-top">
+          <p class="small fw-semibold mb-2">Arquivos anexados</p>
+          <div class="d-flex flex-column gap-2">
+            <% comment.files.each do |file| %>
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 rounded border p-2 bg-light-subtle">
+                <div>
+                  <p class="mb-0 small fw-semibold"><%= file.filename %></p>
+                  <small class="text-secondary"><%= number_to_human_size(file.byte_size) %></small>
+                </div>
+                <%= link_to "Baixar", rails_blob_path(file, disposition: "attachment"), class: "btn btn-sm btn-outline-secondary" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</article>
