@@ -221,32 +221,30 @@ Isso deixa mais claro:
 
 A modelagem do banco foi criada no draw.io. A forma mais prática de disponibilizar isso no repositório é manter dois arquivos:
 
-1. O arquivo editável do draw.io, por exemplo:
+1. O arquivo editável do draw.io.
 
 ```text
 docs/diagrama-relacional.drawio
 ```
 
-2. Uma exportação visual para o README, preferencialmente em SVG:
+2. Uma exportação visual para o README. Neste projeto, a imagem está em:
 
 ```text
-docs/diagrama-relacional.svg
+docs/Banco-Dados-Projeto-Dunnas-png.drawio.png
 ```
 
 ### Por que essa é a melhor opção
 
 - o `.drawio` mantém o diagrama editável para futuras alterações;
-- o `.svg` renderiza bem no GitHub e no README;
-- o SVG fica mais nítido que PNG em telas grandes e em zoom;
-- se houver uma versão muito pesada, o PNG pode ser usado como alternativa.
+- uma imagem exportada permite visualização direta no GitHub e no README;
+- SVG tende a ficar mais nítido em zoom, mas PNG funciona bem como alternativa prática;
+- é possível manter ambos quando necessário.
 
 ### Como inserir no README
 
-Depois de exportar o diagrama, você pode adicionar a imagem assim:
+Imagem atual do diagrama (em `docs/`):
 
-```md
-![Diagrama relacional do banco de dados](docs/diagrama-relacional.svg)
-```
+![Diagrama relacional do banco de dados](docs/Banco-Dados-Projeto-Dunnas-png.drawio.png)
 
 E também disponibilizar o arquivo original para edição:
 
